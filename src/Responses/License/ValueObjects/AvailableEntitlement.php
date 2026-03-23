@@ -1,0 +1,99 @@
+<?php declare(strict_types=1);
+
+namespace StellarWP\LicensingApiClient\Responses\License\ValueObjects;
+
+use DateTimeImmutable;
+use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
+use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+
+/**
+ * Represents an entitlement option when tier selection is required.
+ *
+ * @implements Response<array{
+ *     tier: string,
+ *     site_limit: int,
+ *     active_count: int,
+ *     available: int,
+ *     capabilities: list<string>,
+ *     status: string,
+ *     expires: string
+ * }>
+ */
+final class AvailableEntitlement implements Response
+{
+	use InteractsWithDateTime;
+
+	public string $tier;
+
+	public int $siteLimit;
+
+	public int $activeCount;
+
+	public int $available;
+
+	/** @var list<string> */
+	public array $capabilities;
+
+	public string $status;
+
+	public DateTimeImmutable $expires;
+
+	/**
+	 * @param list<string> $capabilities
+	 */
+	private function __construct(
+		string $tier,
+		int $siteLimit,
+		int $activeCount,
+		int $available,
+		array $capabilities,
+		string $status,
+		DateTimeImmutable $expires
+	) {
+		$this->tier         = $tier;
+		$this->siteLimit    = $siteLimit;
+		$this->activeCount  = $activeCount;
+		$this->available    = $available;
+		$this->capabilities = $capabilities;
+		$this->status       = $status;
+		$this->expires      = $expires;
+	}
+
+	/**
+	 * @param array{
+	 *     tier: string,
+	 *     site_limit: int,
+	 *     active_count: int,
+	 *     available: int,
+	 *     capabilities: list<string>,
+	 *     status: string,
+	 *     expires: string
+	 * } $attributes
+	 *
+	 * @throws UnexpectedResponseException
+	 */
+	public static function from(array $attributes): self {
+		return new self(
+			$attributes['tier'],
+			$attributes['site_limit'],
+			$attributes['active_count'],
+			$attributes['available'],
+			$attributes['capabilities'],
+			$attributes['status'],
+			self::parseDateTime($attributes['expires'])
+		);
+	}
+
+	public function toArray(): array {
+		return [
+			'tier'         => $this->tier,
+			'site_limit'   => $this->siteLimit,
+			'active_count' => $this->activeCount,
+			'available'    => $this->available,
+			'capabilities' => $this->capabilities,
+			'status'       => $this->status,
+			'expires'      => $this->expires->format('Y-m-d H:i:s'),
+		];
+	}
+}

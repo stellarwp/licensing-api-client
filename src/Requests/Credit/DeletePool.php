@@ -1,0 +1,58 @@
+<?php declare(strict_types=1);
+
+namespace StellarWP\LicensingApiClient\Requests\Credit;
+
+use DateTimeImmutable;
+use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
+
+/**
+ * Represents a credit pool delete request payload.
+ *
+ * @phpstan-type DeletePoolPayload array{
+ *     key: string,
+ *     pool_id: int,
+ *     expires_at?: string
+ * }
+ */
+final class DeletePool
+{
+	use InteractsWithDateTime;
+
+	/**
+	 * License key that owns the credit pool.
+	 *
+	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
+	 */
+	public string $key;
+
+	/**
+	 * Credit pool identifier to delete.
+	 *
+	 * @example 42
+	 */
+	public int $poolId;
+
+	/**
+	 * Optional expiration timestamp to soft-delete the pool at a specific time.
+	 *
+	 * @example 2026-04-01T00:00:00Z
+	 */
+	public ?DateTimeImmutable $expiresAt;
+
+	public function __construct(string $key, int $poolId, ?DateTimeImmutable $expiresAt = null) {
+		$this->key       = $key;
+		$this->poolId    = $poolId;
+		$this->expiresAt = $expiresAt;
+	}
+
+	/**
+	 * @return DeletePoolPayload
+	 */
+	public function toArray(): array {
+		return array_filter([
+			'key'        => $this->key,
+			'pool_id'    => $this->poolId,
+			'expires_at' => $this->expiresAt ? $this->formatDateTime($this->expiresAt) : null,
+		], static fn ($value): bool => $value !== null);
+	}
+}
