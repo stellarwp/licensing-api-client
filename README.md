@@ -5,7 +5,7 @@
 
 A PHP client for the StellarWP Licensing API.
 
-> 💡 In most cases you should use one of the transport-specific client packages instead of installing this package directly:
+> 💡 In most cases you should use one of the transport-specific client packages instead of installing this package directly unless you plan to provide your own API client:
 >
 > - [stellarwp/licensing-api-client-wordpress](https://github.com/stellarwp/licensing-api-client-wordpress)
 > - [stellarwp/licensing-api-client-guzzle](https://github.com/stellarwp/licensing-api-client-guzzle)
