@@ -7,7 +7,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\EndpointFactory;
+use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
 use StellarWP\LicensingApiClient\Http\RequestExecutor;
 use StellarWP\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
 use StellarWP\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
@@ -70,7 +70,7 @@ final class CreditsResource implements CreditsResourceInterface
 
 	private RequestExecutor $requestExecutor;
 
-	private EndpointFactory $endpointFactory;
+	private ApiUriFactory $apiUriFactory;
 
 	private AuthState $authState;
 
@@ -82,14 +82,14 @@ final class CreditsResource implements CreditsResourceInterface
 
 	public function __construct(
 		RequestExecutor $requestExecutor,
-		EndpointFactory $endpointFactory,
+		ApiUriFactory $apiUriFactory,
 		AuthState $authState,
 		CreditsPoolsResource $pools,
 		CreditsQuotasResource $quotas,
 		CreditsLedgerResource $ledger
 	) {
 		$this->requestExecutor = $requestExecutor;
-		$this->endpointFactory = $endpointFactory;
+		$this->apiUriFactory   = $apiUriFactory;
 		$this->authState       = $authState;
 		$this->pools           = $pools;
 		$this->quotas          = $quotas;
@@ -99,7 +99,7 @@ final class CreditsResource implements CreditsResourceInterface
 	protected function rebindWithAuthState(AuthState $authState): self {
 		return new self(
 			$this->requestExecutor,
-			$this->endpointFactory,
+			$this->apiUriFactory,
 			$authState,
 			$this->pools->withAuthState($authState),
 			$this->quotas->withAuthState($authState),
@@ -118,7 +118,7 @@ final class CreditsResource implements CreditsResourceInterface
 	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null) {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
-			$this->endpointFactory->make('/credits'),
+			$this->apiUriFactory->make('/credits'),
 			array_filter([
 				'key'         => $key,
 				'domain'      => $domain,
@@ -151,7 +151,7 @@ final class CreditsResource implements CreditsResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/credits/usage'),
+			$this->apiUriFactory->make('/credits/usage'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail(),
@@ -182,7 +182,7 @@ final class CreditsResource implements CreditsResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/credits/refunds'),
+			$this->apiUriFactory->make('/credits/refunds'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail(),

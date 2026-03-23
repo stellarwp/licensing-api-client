@@ -12,10 +12,9 @@ namespace StellarWP\LicensingApiClient\Requests\License\Listing;
  * - `productSlug` and `tier` limit results to matching subscriptions.
  *
  * Cursor pagination:
- * - `beforeId` is the next cursor value returned by the previous page.
+ * - `startingAfter` requests the next page after a known item ID.
+ * - `endingBefore` requests the previous page before a known item ID.
  * - `limit` controls the page size and defaults to the API default of 25.
- *
- * @TODO Update once we add back and forward cursor pagination.
  */
 final class ListRequest
 {
@@ -29,7 +28,9 @@ final class ListRequest
 
 	public ?string $tier;
 
-	public ?int $beforeId;
+	public ?int $startingAfter;
+
+	public ?int $endingBefore;
 
 	public int $limit;
 
@@ -39,16 +40,18 @@ final class ListRequest
 		?string $status = null,
 		?string $productSlug = null,
 		?string $tier = null,
-		?int $beforeId = null,
+		?int $startingAfter = null,
+		?int $endingBefore = null,
 		int $limit = 25
 	) {
-		$this->search      = $search;
-		$this->identityId  = $identityId;
-		$this->status      = $status;
-		$this->productSlug = $productSlug;
-		$this->tier        = $tier;
-		$this->beforeId    = $beforeId;
-		$this->limit       = $limit;
+		$this->search        = $search;
+		$this->identityId    = $identityId;
+		$this->status        = $status;
+		$this->productSlug   = $productSlug;
+		$this->tier          = $tier;
+		$this->startingAfter = $startingAfter;
+		$this->endingBefore  = $endingBefore;
+		$this->limit         = $limit;
 	}
 
 	/**
@@ -58,19 +61,21 @@ final class ListRequest
 	 *     status?: string,
 	 *     product_slug?: string,
 	 *     tier?: string,
-	 *     before_id?: int,
+	 *     starting_after?: int,
+	 *     ending_before?: int,
 	 *     limit: int
 	 * }
 	 */
 	public function toQuery(): array {
 		return array_filter([
-			'search'       => $this->search,
-			'identity_id'  => $this->identityId,
-			'status'       => $this->status,
-			'product_slug' => $this->productSlug,
-			'tier'         => $this->tier,
-			'before_id'    => $this->beforeId,
-			'limit'        => $this->limit,
+			'search'         => $this->search,
+			'identity_id'    => $this->identityId,
+			'status'         => $this->status,
+			'product_slug'   => $this->productSlug,
+			'tier'           => $this->tier,
+			'starting_after' => $this->startingAfter,
+			'ending_before'  => $this->endingBefore,
+			'limit'          => $this->limit,
 		], static fn ($value): bool => $value !== null);
 	}
 }

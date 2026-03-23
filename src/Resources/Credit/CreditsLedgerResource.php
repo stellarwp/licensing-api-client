@@ -2,12 +2,13 @@
 
 namespace StellarWP\LicensingApiClient\Resources\Credit;
 
+use Generator;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\EndpointFactory;
+use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
 use StellarWP\LicensingApiClient\Http\RequestExecutor;
 use StellarWP\LicensingApiClient\Requests\Credit\ListLedgerEntries;
 use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
@@ -34,8 +35,19 @@ use StellarWP\LicensingApiClient\Responses\ErrorResponse;
  * }
  * @phpstan-type LedgerPagePayload array{
  *     entries: list<LedgerEntryPayload>,
- *     limit: int,
- *     next_cursor: int|null
+ *     links: array{
+ *         first: string,
+ *         last: string|null,
+ *         prev: string|null,
+ *         next: string|null
+ *     },
+ *     meta: array{
+ *         page: array{
+ *             total: int,
+ *             limit: int,
+ *             max_size: int
+ *         }
+ *     }
  * }
  */
 final class CreditsLedgerResource implements CreditsLedgerResourceInterface
@@ -44,22 +56,22 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 
 	private RequestExecutor $requestExecutor;
 
-	private EndpointFactory $endpointFactory;
+	private ApiUriFactory $apiUriFactory;
 
 	private AuthState $authState;
 
 	public function __construct(
 		RequestExecutor $requestExecutor,
-		EndpointFactory $endpointFactory,
+		ApiUriFactory $apiUriFactory,
 		AuthState $authState
 	) {
 		$this->requestExecutor = $requestExecutor;
-		$this->endpointFactory = $endpointFactory;
+		$this->apiUriFactory   = $apiUriFactory;
 		$this->authState       = $authState;
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->endpointFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 
 	/**
@@ -76,7 +88,7 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'GET',
-			$this->endpointFactory->make('/credits/ledger'),
+			$this->apiUriFactory->make('/credits/ledger'),
 			$query,
 			null,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -88,5 +100,40 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 
 		/** @var LedgerPagePayload $result */
 		return LedgerPage::from($result);
+	}
+
+	/**
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 *
+	 * @return Generator<int, LedgerPage|ErrorResponse, mixed, void>
+	 */
+	public function pages(ListLedgerEntries $request): Generator {
+		$page = $this->list($request);
+
+		while (true) {
+			yield $page;
+
+			if ($page instanceof ErrorResponse || $page->links->next === null) {
+				return;
+			}
+
+			$result = $this->requestExecutor->executeJson(
+				'GET',
+				$this->apiUriFactory->fromPaginationLink($page->links->next),
+				[],
+				null,
+				$this->authState->resolveRequiredTokenOrFail()
+			);
+
+			if ($result instanceof ErrorResponse) {
+				yield $result;
+
+				return;
+			}
+
+			/** @var LedgerPagePayload $result */
+			$page = LedgerPage::from($result);
+		}
 	}
 }

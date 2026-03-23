@@ -2,12 +2,13 @@
 
 namespace StellarWP\LicensingApiClient\Resources;
 
+use Generator;
 use JsonException;
 use Psr\Http\Client\ClientExceptionInterface;
 use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\EndpointFactory;
+use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
 use StellarWP\LicensingApiClient\Http\RequestExecutor;
 use StellarWP\LicensingApiClient\Requests\License\Activate as ActivateRequest;
 use StellarWP\LicensingApiClient\Requests\License\Alias\ImportAliases as ImportAliasesRequest;
@@ -78,8 +79,19 @@ use StellarWP\LicensingApiClient\Responses\License\Validate;
  *             purchase_date: string
  *         }>
  *     }>,
- *     limit: int,
- *     next_cursor: ?int
+ *     links: array{
+ *         first: string,
+ *         last: string|null,
+ *         prev: string|null,
+ *         next: string|null
+ *     },
+ *     meta: array{
+ *         page: array{
+ *             total: int,
+ *             limit: int,
+ *             max_size: int
+ *         }
+ *     }
  * }
  * @phpstan-import-type ActivatePayload from ActivateRequest
  * @phpstan-import-type DeactivatePayload from DeactivateRequest
@@ -118,22 +130,22 @@ final class LicensesResource implements LicensesResourceInterface
 
 	private RequestExecutor $requestExecutor;
 
-	private EndpointFactory $endpointFactory;
+	private ApiUriFactory $apiUriFactory;
 
 	private AuthState $authState;
 
 	public function __construct(
 		RequestExecutor $requestExecutor,
-		EndpointFactory $endpointFactory,
+		ApiUriFactory $apiUriFactory,
 		AuthState $authState
 	) {
 		$this->requestExecutor = $requestExecutor;
-		$this->endpointFactory = $endpointFactory;
+		$this->apiUriFactory   = $apiUriFactory;
 		$this->authState       = $authState;
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->endpointFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 
 	/**
@@ -150,7 +162,7 @@ final class LicensesResource implements LicensesResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/licenses/activate'),
+			$this->apiUriFactory->make('/licenses/activate'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -178,7 +190,7 @@ final class LicensesResource implements LicensesResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/licenses/deactivate'),
+			$this->apiUriFactory->make('/licenses/deactivate'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -203,7 +215,7 @@ final class LicensesResource implements LicensesResourceInterface
 	public function list(ListRequest $request) {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
-			$this->endpointFactory->make('/licenses'),
+			$this->apiUriFactory->make('/licenses'),
 			$request->toQuery(),
 			null,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -215,6 +227,41 @@ final class LicensesResource implements LicensesResourceInterface
 
 		/** @var ListingPayload $result */
 		return Listing::from($result);
+	}
+
+	/**
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 *
+	 * @return Generator<int, Listing|ErrorResponse, mixed, void>
+	 */
+	public function pages(ListRequest $request): Generator {
+		$page = $this->list($request);
+
+		while (true) {
+			yield $page;
+
+			if ($page instanceof ErrorResponse || $page->links->next === null) {
+				return;
+			}
+
+			$result = $this->requestExecutor->executeJson(
+				'GET',
+				$this->apiUriFactory->fromPaginationLink($page->links->next),
+				[],
+				null,
+				$this->authState->resolveRequiredTokenOrFail()
+			);
+
+			if ($result instanceof ErrorResponse) {
+				yield $result;
+
+				return;
+			}
+
+			/** @var ListingPayload $result */
+			$page = Listing::from($result);
+		}
 	}
 
 	/**
@@ -232,7 +279,7 @@ final class LicensesResource implements LicensesResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/licenses/validate'),
+			$this->apiUriFactory->make('/licenses/validate'),
 			[],
 			[
 				'key'           => $key,
@@ -259,7 +306,7 @@ final class LicensesResource implements LicensesResourceInterface
 	 * @return StatusChange|ErrorResponse
 	 */
 	public function suspend(LicenseReference $request) {
-		return $this->changeLicenseStatus($this->endpointFactory->make('/licenses/suspend'), $request);
+		return $this->changeLicenseStatus('/licenses/suspend', $request);
 	}
 
 	/**
@@ -271,7 +318,7 @@ final class LicensesResource implements LicensesResourceInterface
 	 * @return StatusChange|ErrorResponse
 	 */
 	public function reinstate(LicenseReference $request) {
-		return $this->changeLicenseStatus($this->endpointFactory->make('/licenses/reinstate'), $request);
+		return $this->changeLicenseStatus('/licenses/reinstate', $request);
 	}
 
 	/**
@@ -283,7 +330,7 @@ final class LicensesResource implements LicensesResourceInterface
 	 * @return StatusChange|ErrorResponse
 	 */
 	public function ban(LicenseReference $request) {
-		return $this->changeLicenseStatus($this->endpointFactory->make('/licenses/ban'), $request);
+		return $this->changeLicenseStatus('/licenses/ban', $request);
 	}
 
 	/**
@@ -300,7 +347,7 @@ final class LicensesResource implements LicensesResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/licenses/regenerate-key'),
+			$this->apiUriFactory->make('/licenses/regenerate-key'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -328,7 +375,7 @@ final class LicensesResource implements LicensesResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/licenses/aliases'),
+			$this->apiUriFactory->make('/licenses/aliases'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -356,7 +403,7 @@ final class LicensesResource implements LicensesResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'DELETE',
-			$this->endpointFactory->make('/licenses/aliases'),
+			$this->apiUriFactory->make('/licenses/aliases'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -378,13 +425,13 @@ final class LicensesResource implements LicensesResourceInterface
 	 *
 	 * @return StatusChange|ErrorResponse
 	 */
-	private function changeLicenseStatus(\StellarWP\LicensingApiClient\Http\Endpoint $endpoint, LicenseReference $request) {
+	private function changeLicenseStatus(string $path, LicenseReference $request) {
 		/** @var LicenseReferencePayload $body */
 		$body = $request->toArray();
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$endpoint,
+			$this->apiUriFactory->make($path),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()

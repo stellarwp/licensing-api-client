@@ -4,6 +4,8 @@ namespace StellarWP\LicensingApiClient\Responses\Credit;
 
 use StellarWP\LicensingApiClient\Responses\Contracts\Response;
 use StellarWP\LicensingApiClient\Responses\Credit\ValueObjects\LedgerEntry;
+use StellarWP\LicensingApiClient\Responses\ValueObjects\PageMeta;
+use StellarWP\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
 
 /**
  * Represents a cursor-paginated credits ledger response.
@@ -22,8 +24,19 @@ use StellarWP\LicensingApiClient\Responses\Credit\ValueObjects\LedgerEntry;
  *         idempotency_key: string,
  *         created_at: string
  *     }>,
- *     limit: int,
- *     next_cursor: int|null
+ *     links: array{
+ *         first: string,
+ *         last: string|null,
+ *         prev: string|null,
+ *         next: string|null
+ *     },
+ *     meta: array{
+ *         page: array{
+ *             total: int,
+ *             limit: int,
+ *             max_size: int
+ *         }
+ *     }
  * }>
  */
 final class LedgerPage implements Response
@@ -33,17 +46,17 @@ final class LedgerPage implements Response
 	 */
 	public array $entries;
 
-	public int $limit;
+	public PaginationLinks $links;
 
-	public ?int $nextCursor;
+	public PageMeta $page;
 
 	/**
 	 * @param list<LedgerEntry> $entries
 	 */
-	private function __construct(array $entries, int $limit, ?int $nextCursor) {
-		$this->entries     = $entries;
-		$this->limit       = $limit;
-		$this->nextCursor  = $nextCursor;
+	private function __construct(array $entries, PaginationLinks $links, PageMeta $page) {
+		$this->entries = $entries;
+		$this->links   = $links;
+		$this->page    = $page;
 	}
 
 	/**
@@ -61,8 +74,19 @@ final class LedgerPage implements Response
 	 *         idempotency_key: string,
 	 *         created_at: string
 	 *     }>,
-	 *     limit: int,
-	 *     next_cursor: int|null
+	 *     links: array{
+	 *         first: string,
+	 *         last: string|null,
+	 *         prev: string|null,
+	 *         next: string|null
+	 *     },
+	 *     meta: array{
+	 *         page: array{
+	 *             total: int,
+	 *             limit: int,
+	 *             max_size: int
+	 *         }
+	 *     }
 	 * } $attributes
 	 */
 	public static function from(array $attributes): self {
@@ -71,8 +95,8 @@ final class LedgerPage implements Response
 				static fn (array $entry): LedgerEntry => LedgerEntry::from($entry),
 				$attributes['entries']
 			),
-			$attributes['limit'],
-			$attributes['next_cursor']
+			PaginationLinks::from($attributes['links']),
+			PageMeta::from($attributes['meta']['page'])
 		);
 	}
 
@@ -91,8 +115,19 @@ final class LedgerPage implements Response
 	 *         idempotency_key: string,
 	 *         created_at: string
 	 *     }>,
-	 *     limit: int,
-	 *     next_cursor: int|null
+	 *     links: array{
+	 *         first: string,
+	 *         last: string|null,
+	 *         prev: string|null,
+	 *         next: string|null
+	 *     },
+	 *     meta: array{
+	 *         page: array{
+	 *             total: int,
+	 *             limit: int,
+	 *             max_size: int
+	 *         }
+	 *     }
 	 * }
 	 */
 	public function toArray(): array {
@@ -101,8 +136,10 @@ final class LedgerPage implements Response
 				static fn (LedgerEntry $entry): array => $entry->toArray(),
 				$this->entries
 			),
-			'limit'       => $this->limit,
-			'next_cursor' => $this->nextCursor,
+			'links'   => $this->links->toArray(),
+			'meta'    => [
+				'page' => $this->page->toArray(),
+			],
 		];
 	}
 }

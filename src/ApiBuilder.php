@@ -8,7 +8,7 @@ use Psr\Http\Message\StreamFactoryInterface;
 use StellarWP\LicensingApiClient\Http\ApiVersion;
 use StellarWP\LicensingApiClient\Http\AuthContext;
 use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\EndpointFactory;
+use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
 use StellarWP\LicensingApiClient\Http\JsonDecoder;
 use StellarWP\LicensingApiClient\Http\RequestBuilder;
 use StellarWP\LicensingApiClient\Http\RequestExecutor;
@@ -49,18 +49,22 @@ final class ApiBuilder
 
 	public function build(): Api {
 		$authState       = new AuthState(new AuthContext(), $this->config->configuredToken);
-		$endpointFactory = new EndpointFactory(ApiVersion::default());
+		$apiUriFactory   = new ApiUriFactory($this->config, ApiVersion::default());
 		$requestExecutor = $this->buildRequestExecutor();
-		$creditsPools    = new CreditsPoolsResource($requestExecutor, $endpointFactory, $authState);
-		$creditsQuotas   = new CreditsQuotasResource($requestExecutor, $endpointFactory, $authState);
-		$creditsLedger   = new CreditsLedgerResource($requestExecutor, $endpointFactory, $authState);
+		$creditsPools    = new CreditsPoolsResource($requestExecutor, $apiUriFactory, $authState);
+		$creditsQuotas   = new CreditsQuotasResource($requestExecutor, $apiUriFactory, $authState);
+		$creditsLedger        = new CreditsLedgerResource(
+			$requestExecutor,
+			$apiUriFactory,
+			$authState
+		);
 
 		return new Api(
 			$authState,
-			new LicensesResource($requestExecutor, $endpointFactory, $authState),
-			new ProductsResource($requestExecutor, $endpointFactory, $authState),
-			new CreditsResource($requestExecutor, $endpointFactory, $authState, $creditsPools, $creditsQuotas, $creditsLedger),
-			new EntitlementsResource($requestExecutor, $endpointFactory, $authState)
+			new LicensesResource($requestExecutor, $apiUriFactory, $authState),
+			new ProductsResource($requestExecutor, $apiUriFactory, $authState),
+			new CreditsResource($requestExecutor, $apiUriFactory, $authState, $creditsPools, $creditsQuotas, $creditsLedger),
+			new EntitlementsResource($requestExecutor, $apiUriFactory, $authState)
 		);
 	}
 
@@ -69,8 +73,7 @@ final class ApiBuilder
 			$this->httpClient,
 			new RequestBuilder(
 				$this->requestFactory,
-				$this->streamFactory,
-				$this->config
+				$this->streamFactory
 			),
 			new JsonDecoder()
 		);

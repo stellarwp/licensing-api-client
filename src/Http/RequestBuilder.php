@@ -6,7 +6,6 @@ use JsonException;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use StellarWP\LicensingApiClient\Config;
 use StellarWP\LicensingApiClient\Value\AuthToken;
 
 /**
@@ -24,16 +23,12 @@ final class RequestBuilder
 
 	private StreamFactoryInterface $streamFactory;
 
-	private Config $config;
-
 	public function __construct(
 		RequestFactoryInterface $requestFactory,
-		StreamFactoryInterface $streamFactory,
-		Config $config
+		StreamFactoryInterface $streamFactory
 	) {
 		$this->requestFactory = $requestFactory;
 		$this->streamFactory  = $streamFactory;
-		$this->config         = $config;
 	}
 
 	/**
@@ -45,16 +40,29 @@ final class RequestBuilder
 	 */
 	public function build(
 		string $method,
-		Endpoint $endpoint,
+		ApiUri $uri,
 		array $query = [],
 		?array $body = null,
 		?AuthToken $token = null,
 		array $headers = []
 	): RequestInterface {
-		$request = $this->requestFactory->createRequest(
-			$method,
-			$this->buildUri($endpoint, $query)
-		);
+		$request = $this->requestFactory->createRequest($method, $this->buildUri($uri, $query));
+
+		return $this->finalizeRequest($request, $body, $token, $headers);
+	}
+
+	/**
+	 * @param JsonObject|null            $body
+	 * @param array<string, HeaderValue> $headers
+	 *
+	 * @throws JsonException
+	 */
+	private function finalizeRequest(
+		RequestInterface $request,
+		?array $body = null,
+		?AuthToken $token = null,
+		array $headers = []
+	): RequestInterface {
 
 		if ($token !== null) {
 			$request = $request->withHeader('X-LWS-Token', $token->value());
@@ -77,12 +85,8 @@ final class RequestBuilder
 	/**
 	 * @param array<string, QueryValue> $query
 	 */
-	private function buildUri(Endpoint $endpoint, array $query): string {
-		$uri = rtrim($this->config->baseUri, '/')
-			. '/wp-json/stellarwp/'
-			. $endpoint->version()->value()
-			. '/'
-			. ltrim($endpoint->path(), '/');
+	private function buildUri(ApiUri $uri, array $query): string {
+		$uri = $uri->uri();
 
 		$queryString = http_build_query(array_filter($query, static function ($value): bool {
 			return $value !== null;
@@ -92,10 +96,6 @@ final class RequestBuilder
 			return $uri;
 		}
 
-		return $uri . '?' . $queryString;
+		return $uri . (strpos($uri, '?') === false ? '?' : '&') . $queryString;
 	}
-
-	/**
-	 * @param array<string, QueryValue> $query
-	 */
 }

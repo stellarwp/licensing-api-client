@@ -7,7 +7,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\EndpointFactory;
+use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
 use StellarWP\LicensingApiClient\Http\RequestExecutor;
 use StellarWP\LicensingApiClient\Requests\Credit\CreatePool;
 use StellarWP\LicensingApiClient\Requests\Credit\DeletePool as DeletePoolRequest;
@@ -51,22 +51,22 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 
 	private RequestExecutor $requestExecutor;
 
-	private EndpointFactory $endpointFactory;
+	private ApiUriFactory $apiUriFactory;
 
 	private AuthState $authState;
 
 	public function __construct(
 		RequestExecutor $requestExecutor,
-		EndpointFactory $endpointFactory,
+		ApiUriFactory $apiUriFactory,
 		AuthState $authState
 	) {
 		$this->requestExecutor = $requestExecutor;
-		$this->endpointFactory = $endpointFactory;
+		$this->apiUriFactory   = $apiUriFactory;
 		$this->authState       = $authState;
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->endpointFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 
 	/**
@@ -80,7 +80,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 	public function list(string $key, bool $active = false) {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
-			$this->endpointFactory->make('/credits/pools'),
+			$this->apiUriFactory->make('/credits/pools'),
 			[
 				'key'    => $key,
 				'active' => $active,
@@ -111,7 +111,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
-			$this->endpointFactory->make('/credits/pools'),
+			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -139,7 +139,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'PATCH',
-			$this->endpointFactory->make('/credits/pools'),
+			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()
@@ -167,7 +167,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 
 		$result = $this->requestExecutor->executeJson(
 			'DELETE',
-			$this->endpointFactory->make('/credits/pools'),
+			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
 			$this->authState->resolveRequiredTokenOrFail()

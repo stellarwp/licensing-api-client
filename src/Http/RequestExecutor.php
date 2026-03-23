@@ -54,13 +54,13 @@ final class RequestExecutor
 	 */
 	public function execute(
 		string $method,
-		Endpoint $endpoint,
+		ApiUri $uri,
 		array $query = [],
 		?array $body = null,
 		?AuthToken $token = null,
 		array $headers = []
 	) {
-		$request    = $this->requestBuilder->build($method, $endpoint, $query, $body, $token, $headers);
+		$request    = $this->requestBuilder->build($method, $uri, $query, $body, $token, $headers);
 		$response   = $this->httpClient->sendRequest($request);
 		$statusCode = $response->getStatusCode();
 
@@ -90,13 +90,13 @@ final class RequestExecutor
 	 */
 	public function executeJson(
 		string $method,
-		Endpoint $endpoint,
+		ApiUri $uri,
 		array $query = [],
 		?array $body = null,
 		?AuthToken $token = null,
 		array $headers = []
 	) {
-		$response = $this->execute($method, $endpoint, $query, $body, $token, $headers);
+		$response = $this->execute($method, $uri, $query, $body, $token, $headers);
 
 		if ($response instanceof ErrorResponse) {
 			return $response;
@@ -110,6 +110,7 @@ final class RequestExecutor
 			throw new UnexpectedResponseException('Unable to decode JSON response.', 0, $exception);
 		}
 	}
+
 	/**
 	 * @throws UnexpectedResponseException
 	 */

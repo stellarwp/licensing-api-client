@@ -4,6 +4,8 @@ namespace StellarWP\LicensingApiClient\Responses\License\Listing;
 
 use StellarWP\LicensingApiClient\Responses\Contracts\Response;
 use StellarWP\LicensingApiClient\Responses\License\Listing\ValueObjects\LicenseListItem;
+use StellarWP\LicensingApiClient\Responses\ValueObjects\PageMeta;
+use StellarWP\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
 
 /**
  * Represents a cursor-paginated license listing.
@@ -25,11 +27,20 @@ use StellarWP\LicensingApiClient\Responses\License\Listing\ValueObjects\LicenseL
  *             purchase_date: string
  *         }>
  *     }>,
- *     limit: int,
- *     next_cursor: ?int
+ *     links: array{
+ *         first: string,
+ *         last: string|null,
+ *         prev: string|null,
+ *         next: string|null
+ *     },
+ *     meta: array{
+ *         page: array{
+ *             total: int,
+ *             limit: int,
+ *             max_size: int
+ *         }
+ *     }
  * }>
- *
- * @TODO Update once we add back and forward cursor pagination.
  */
 final class Listing implements Response
 {
@@ -38,17 +49,17 @@ final class Listing implements Response
 	 */
 	public array $licenses;
 
-	public int $limit;
+	public PaginationLinks $links;
 
-	public ?int $nextCursor;
+	public PageMeta $page;
 
 	/**
 	 * @param LicenseListItem[] $licenses
 	 */
-	private function __construct(array $licenses, int $limit, ?int $nextCursor) {
-		$this->licenses   = $licenses;
-		$this->limit      = $limit;
-		$this->nextCursor = $nextCursor;
+	private function __construct(array $licenses, PaginationLinks $links, PageMeta $page) {
+		$this->licenses = $licenses;
+		$this->links    = $links;
+		$this->page     = $page;
 	}
 
 	/**
@@ -69,15 +80,26 @@ final class Listing implements Response
 	 *             purchase_date: string
 	 *         }>
 	 *     }>,
-	 *     limit: int,
-	 *     next_cursor: ?int
+	 *     links: array{
+	 *         first: string,
+	 *         last: string|null,
+	 *         prev: string|null,
+	 *         next: string|null
+	 *     },
+	 *     meta: array{
+	 *         page: array{
+	 *             total: int,
+	 *             limit: int,
+	 *             max_size: int
+	 *         }
+	 *     }
 	 * } $attributes
 	 */
 	public static function from(array $attributes): self {
 		return new self(
 			array_map(static fn (array $license): LicenseListItem => LicenseListItem::from($license), $attributes['licenses']),
-			$attributes['limit'],
-			$attributes['next_cursor']
+			PaginationLinks::from($attributes['links']),
+			PageMeta::from($attributes['meta']['page'])
 		);
 	}
 
@@ -99,18 +121,31 @@ final class Listing implements Response
 	 *             purchase_date: string
 	 *         }>
 	 *     }>,
-	 *     limit: int,
-	 *     next_cursor: ?int
+	 *     links: array{
+	 *         first: string,
+	 *         last: string|null,
+	 *         prev: string|null,
+	 *         next: string|null
+	 *     },
+	 *     meta: array{
+	 *         page: array{
+	 *             total: int,
+	 *             limit: int,
+	 *             max_size: int
+	 *         }
+	 *     }
 	 * }
 	 */
 	public function toArray(): array {
 		return [
-			'licenses'    => array_map(
+			'licenses' => array_map(
 				static fn (LicenseListItem $license): array => $license->toArray(),
 				$this->licenses
 			),
-			'limit'       => $this->limit,
-			'next_cursor' => $this->nextCursor,
+			'links'    => $this->links->toArray(),
+			'meta'     => [
+				'page' => $this->page->toArray(),
+			],
 		];
 	}
 }

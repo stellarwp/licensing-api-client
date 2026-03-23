@@ -2,9 +2,6 @@
 
 namespace StellarWP\LicensingApiClient\Contracts;
 
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsLedgerResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
 use StellarWP\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
 use StellarWP\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
 use StellarWP\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;

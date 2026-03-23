@@ -17,6 +17,8 @@ final class Config
 
 	public string $userAgent;
 
+	public string $restNamespace;
+
 	public RetryPolicy $retryPolicy;
 
 	/**
@@ -26,17 +28,24 @@ final class Config
 		string $baseUri,
 		?string $configuredToken = null,
 		?string $userAgent = null,
-		?RetryPolicy $retryPolicy = null
+		?RetryPolicy $retryPolicy = null,
+		?string $restNamespace = null
 	) {
-		$baseUri = rtrim($baseUri, '/');
+		$baseUri       = rtrim($baseUri, '/');
+		$restNamespace = trim(($restNamespace ?? 'stellarwp'), '/');
 
 		if ($baseUri === '') {
 			throw new InvalidArgumentException('Base URI cannot be empty.');
 		}
 
+		if ($restNamespace === '') {
+			throw new InvalidArgumentException('REST namespace cannot be empty.');
+		}
+
 		$this->baseUri         = $baseUri;
 		$this->configuredToken = $configuredToken !== null ? new AuthToken($configuredToken) : null;
 		$this->userAgent       = $userAgent !== null && $userAgent !== '' ? $userAgent : 'stellarwp/licensing-api-client';
+		$this->restNamespace   = $restNamespace;
 		$this->retryPolicy     = $retryPolicy ?: RetryPolicy::default();
 	}
 
@@ -45,7 +54,8 @@ final class Config
 	 *     base_uri?: non-empty-string,
 	 *     configured_token?: non-empty-string|null,
 	 *     user_agent?: non-empty-string|null,
-	 *     retry_policy?: RetryPolicy|null
+	 *     retry_policy?: RetryPolicy|null,
+	 *     rest_namespace?: non-empty-string|null
 	 * } $config
 	 *
 	 * @throws InvalidArgumentException
@@ -55,7 +65,13 @@ final class Config
 			$config['base_uri'] ?? '',
 			$config['configured_token'] ?? null,
 			$config['user_agent'] ?? null,
-			$config['retry_policy'] ?? null
+			$config['retry_policy'] ?? null,
+			$config['rest_namespace'] ?? null
 		);
+	}
+
+	public function apiRootPath(): string
+	{
+		return '/wp-json/' . $this->restNamespace;
 	}
 }

@@ -17,7 +17,8 @@ use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
  *     after?: string,
  *     before?: string,
  *     limit: int,
- *     before_id?: int
+ *     starting_after?: int,
+ *     ending_before?: int
  * }
  */
 final class ListLedgerEntries
@@ -82,11 +83,18 @@ final class ListLedgerEntries
 	public int $limit;
 
 	/**
+	 * Cursor for pagination. Return entries with IDs higher than this value.
+	 *
+	 * @example 1002
+	 */
+	public ?int $startingAfter;
+
+	/**
 	 * Cursor for pagination. Return entries with IDs lower than this value.
 	 *
 	 * @example 1002
 	 */
-	public ?int $beforeId;
+	public ?int $endingBefore;
 
 	public function __construct(
 		string $key,
@@ -97,17 +105,19 @@ final class ListLedgerEntries
 		?DateTimeImmutable $after = null,
 		?DateTimeImmutable $before = null,
 		int $limit = 50,
-		?int $beforeId = null
+		?int $startingAfter = null,
+		?int $endingBefore = null
 	) {
-		$this->key        = $key;
-		$this->domain     = $domain;
-		$this->creditType = $creditType;
-		$this->poolId     = $poolId;
-		$this->entryType  = $entryType;
-		$this->after      = $after;
-		$this->before     = $before;
-		$this->limit      = $limit;
-		$this->beforeId   = $beforeId;
+		$this->key           = $key;
+		$this->domain        = $domain;
+		$this->creditType    = $creditType;
+		$this->poolId        = $poolId;
+		$this->entryType     = $entryType;
+		$this->after         = $after;
+		$this->before        = $before;
+		$this->limit         = $limit;
+		$this->startingAfter = $startingAfter;
+		$this->endingBefore  = $endingBefore;
 	}
 
 	/**
@@ -115,15 +125,16 @@ final class ListLedgerEntries
 	 */
 	public function toQuery(): array {
 		return array_filter([
-			'key'         => $this->key,
-			'domain'      => $this->domain,
-			'credit_type' => $this->creditType,
-			'pool_id'     => $this->poolId,
-			'entry_type'  => $this->entryType,
-			'after'       => $this->after ? $this->formatDateTime($this->after) : null,
-			'before'      => $this->before ? $this->formatDateTime($this->before) : null,
-			'limit'       => $this->limit,
-			'before_id'   => $this->beforeId,
+			'key'            => $this->key,
+			'domain'         => $this->domain,
+			'credit_type'    => $this->creditType,
+			'pool_id'        => $this->poolId,
+			'entry_type'     => $this->entryType,
+			'after'          => $this->after ? $this->formatDateTime($this->after) : null,
+			'before'         => $this->before ? $this->formatDateTime($this->before) : null,
+			'limit'          => $this->limit,
+			'starting_after' => $this->startingAfter,
+			'ending_before'  => $this->endingBefore,
 		], static fn ($value): bool => $value !== null);
 	}
 }

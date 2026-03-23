@@ -2,6 +2,7 @@
 
 namespace StellarWP\LicensingApiClient\Resources\Contracts;
 
+use Generator;
 use StellarWP\LicensingApiClient\Requests\License\Activate;
 use StellarWP\LicensingApiClient\Requests\License\Alias\ImportAliases;
 use StellarWP\LicensingApiClient\Requests\License\Alias\RemoveAliases;
@@ -28,6 +29,11 @@ interface LicensesResourceInterface
 	 * @return Listing|ErrorResponse
 	 */
 	public function list(ListRequest $request);
+
+	/**
+	 * @return Generator<int, Listing|ErrorResponse, mixed, void>
+	 */
+	public function pages(ListRequest $request): Generator;
 
 	/**
 	 * @return ActivateResponse|ErrorResponse
