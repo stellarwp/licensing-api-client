@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Credit;
+namespace LiquidWeb\LicensingApiClient\Responses\Credit;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents a successful credit refund response.

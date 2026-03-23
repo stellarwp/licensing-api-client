@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Contracts;
+namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
-use StellarWP\LicensingApiClient\Requests\Credit\CreatePool;
-use StellarWP\LicensingApiClient\Requests\Credit\DeletePool as DeletePoolRequest;
-use StellarWP\LicensingApiClient\Requests\Credit\UpdatePool;
-use StellarWP\LicensingApiClient\Responses\Credit\DeletePool;
-use StellarWP\LicensingApiClient\Responses\Credit\PoolCollection;
-use StellarWP\LicensingApiClient\Responses\Credit\ValueObjects\CreditPool;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Requests\Credit\CreatePool;
+use LiquidWeb\LicensingApiClient\Requests\Credit\DeletePool as DeletePoolRequest;
+use LiquidWeb\LicensingApiClient\Requests\Credit\UpdatePool;
+use LiquidWeb\LicensingApiClient\Responses\Credit\DeletePool;
+use LiquidWeb\LicensingApiClient\Responses\Credit\PoolCollection;
+use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\CreditPool;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Defines the credits pools resource surface.

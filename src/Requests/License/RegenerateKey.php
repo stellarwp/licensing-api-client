@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\License;
+namespace LiquidWeb\LicensingApiClient\Requests\License;
 
 /**
  * Represents a regenerate-key request payload.

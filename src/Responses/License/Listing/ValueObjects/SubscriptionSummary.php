@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\License\Listing\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\License\Listing\ValueObjects;
 
 use DateTimeImmutable;
-use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents a subscription summary in a license listing.

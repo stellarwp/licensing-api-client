@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Http;
+namespace LiquidWeb\LicensingApiClient\Http;
 
 /**
  * Defines how transport-level retries should behave for a request.

@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Concerns;
+namespace LiquidWeb\LicensingApiClient\Resources\Concerns;
 
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsLedgerResource;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsPoolsResource;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsQuotasResource;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsResource;
-use StellarWP\LicensingApiClient\Resources\EntitlementsResource;
-use StellarWP\LicensingApiClient\Resources\LicensesResource;
-use StellarWP\LicensingApiClient\Resources\ProductsResource;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsLedgerResource;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsPoolsResource;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsQuotasResource;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsResource;
+use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
+use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
+use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
 
 /**
  * Provides immutable auth-state rebinding for auth-bound resource views.

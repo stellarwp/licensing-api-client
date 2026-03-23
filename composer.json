@@ -1,7 +1,7 @@
 {
     "name": "stellarwp/licensing-api-client",
     "type": "library",
-    "description": "A PHP client for the StellarWP Licensing API.",
+    "description": "A PHP client for the Liquid Web Licensing API.",
     "license": "GPL-2.0-or-later",
     "config": {
         "vendor-dir": "vendor",
@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "StellarWP\\LicensingApiClient\\": "src/"
+            "LiquidWeb\\LicensingApiClient\\": "src/"
         }
     },
     "extra": {

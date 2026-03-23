@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\License\Listing;
+namespace LiquidWeb\LicensingApiClient\Responses\License\Listing;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
-use StellarWP\LicensingApiClient\Responses\License\Listing\ValueObjects\LicenseListItem;
-use StellarWP\LicensingApiClient\Responses\ValueObjects\PageMeta;
-use StellarWP\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\License\Listing\ValueObjects\LicenseListItem;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PageMeta;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
 
 /**
  * Represents a cursor-paginated license listing.

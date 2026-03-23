@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Http;
+namespace LiquidWeb\LicensingApiClient\Http;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\DecodingException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Value\AuthToken;
 use Psr\Http\Client\ClientExceptionInterface;
 use Psr\Http\Client\ClientInterface as HttpClient;
 use Psr\Http\Message\ResponseInterface;
-use StellarWP\LicensingApiClient\Exceptions\DecodingException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
-use StellarWP\LicensingApiClient\Value\AuthToken;
 
 /**
  * Executes API requests and normalizes error responses.

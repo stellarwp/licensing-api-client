@@ -1,23 +1,23 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Credit;
+namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Requests\Credit\CreatePool;
+use LiquidWeb\LicensingApiClient\Requests\Credit\DeletePool as DeletePoolRequest;
+use LiquidWeb\LicensingApiClient\Requests\Credit\UpdatePool;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
+use LiquidWeb\LicensingApiClient\Responses\Credit\DeletePool;
+use LiquidWeb\LicensingApiClient\Responses\Credit\PoolCollection;
+use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\CreditPool;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
-use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Requests\Credit\CreatePool;
-use StellarWP\LicensingApiClient\Requests\Credit\DeletePool as DeletePoolRequest;
-use StellarWP\LicensingApiClient\Requests\Credit\UpdatePool;
-use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
-use StellarWP\LicensingApiClient\Responses\Credit\DeletePool;
-use StellarWP\LicensingApiClient\Responses\Credit\PoolCollection;
-use StellarWP\LicensingApiClient\Responses\Credit\ValueObjects\CreditPool;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Provides operations for the credits pools API resource.

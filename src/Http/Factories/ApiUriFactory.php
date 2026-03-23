@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Http\Factories;
+namespace LiquidWeb\LicensingApiClient\Http\Factories;
 
-use StellarWP\LicensingApiClient\Config;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\ApiUri;
-use StellarWP\LicensingApiClient\Http\ApiVersion;
+use LiquidWeb\LicensingApiClient\Config;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\ApiUri;
+use LiquidWeb\LicensingApiClient\Http\ApiVersion;
 
 /**
  * Builds fully resolved licensing API URIs from endpoints and trusted pagination links.

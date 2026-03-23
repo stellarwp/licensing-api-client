@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\Credit;
+namespace LiquidWeb\LicensingApiClient\Requests\Credit;
 
 /**
  * Represents a credit usage write request payload.

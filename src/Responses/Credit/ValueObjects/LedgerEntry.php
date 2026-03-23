@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Credit\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects;
 
 use DateTimeImmutable;
-use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents one credits ledger entry.

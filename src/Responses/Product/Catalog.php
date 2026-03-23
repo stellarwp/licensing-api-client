@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Product;
+namespace LiquidWeb\LicensingApiClient\Responses\Product;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
-use StellarWP\LicensingApiClient\Responses\Product\ValueObjects\CatalogEntry;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Product\ValueObjects\CatalogEntry;
 
 /**
  * Represents the product catalog response payload.

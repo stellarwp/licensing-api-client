@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Contracts;
+namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
-use StellarWP\LicensingApiClient\Responses\Product\Catalog;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Responses\Product\Catalog;
 
 /**
  * Defines the products resource surface.

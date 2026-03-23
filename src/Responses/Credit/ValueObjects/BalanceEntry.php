@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Credit\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents the credit balance for a single credit type.

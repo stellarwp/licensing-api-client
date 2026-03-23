@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Http;
+namespace LiquidWeb\LicensingApiClient\Http;
 
 use JsonException;
-use StellarWP\LicensingApiClient\Exceptions\DecodingException;
+use LiquidWeb\LicensingApiClient\Exceptions\DecodingException;
 
 /**
  * Decodes JSON response bodies into arrays for response mappers.

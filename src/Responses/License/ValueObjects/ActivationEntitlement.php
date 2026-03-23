@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\License\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\License\ValueObjects;
 
 use DateTimeImmutable;
-use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents the entitlement returned by a license activation.

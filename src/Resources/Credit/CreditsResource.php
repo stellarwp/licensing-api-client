@@ -1,25 +1,25 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Credit;
+namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
+use LiquidWeb\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsLedgerResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
+use LiquidWeb\LicensingApiClient\Responses\Credit\BalanceCollection;
+use LiquidWeb\LicensingApiClient\Responses\Credit\RecordUsage;
+use LiquidWeb\LicensingApiClient\Responses\Credit\Refund;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
-use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
-use StellarWP\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
-use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsLedgerResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
-use StellarWP\LicensingApiClient\Responses\Credit\BalanceCollection;
-use StellarWP\LicensingApiClient\Responses\Credit\RecordUsage;
-use StellarWP\LicensingApiClient\Responses\Credit\Refund;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Provides operations for the credits API resource.

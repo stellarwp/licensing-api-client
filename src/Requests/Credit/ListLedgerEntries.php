@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\Credit;
+namespace LiquidWeb\LicensingApiClient\Requests\Credit;
 
 use DateTimeImmutable;
-use StellarWP\LicensingApiClient\Concerns\InteractsWithDateTime;
+use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
 
 /**
  * Represents a credits ledger query request.

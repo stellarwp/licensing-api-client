@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Concerns;
+namespace LiquidWeb\LicensingApiClient\Concerns;
 
 use DateTimeImmutable;
 use DateTimeZone;
 use Exception;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 
 /**
  * Provides shared DateTime parsing and UTC formatting helpers.

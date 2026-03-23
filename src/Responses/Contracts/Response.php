@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Contracts;
+namespace LiquidWeb\LicensingApiClient\Responses\Contracts;
 
 /**
  * Response/value objects implement this interface to provide structured API data.

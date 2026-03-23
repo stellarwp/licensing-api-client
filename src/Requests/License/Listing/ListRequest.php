@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\License\Listing;
+namespace LiquidWeb\LicensingApiClient\Requests\License\Listing;
 
 /**
  * Defines the query parameters for listing licenses.

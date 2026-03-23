@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient;
+namespace LiquidWeb\LicensingApiClient;
 
+use LiquidWeb\LicensingApiClient\Http\ApiVersion;
+use LiquidWeb\LicensingApiClient\Http\AuthContext;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\JsonDecoder;
+use LiquidWeb\LicensingApiClient\Http\RequestBuilder;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsLedgerResource;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsPoolsResource;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsQuotasResource;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsResource;
+use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
+use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
+use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
 use Psr\Http\Client\ClientInterface as HttpClient;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use StellarWP\LicensingApiClient\Http\ApiVersion;
-use StellarWP\LicensingApiClient\Http\AuthContext;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\JsonDecoder;
-use StellarWP\LicensingApiClient\Http\RequestBuilder;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsLedgerResource;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsPoolsResource;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsQuotasResource;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsResource;
-use StellarWP\LicensingApiClient\Resources\EntitlementsResource;
-use StellarWP\LicensingApiClient\Resources\LicensesResource;
-use StellarWP\LicensingApiClient\Resources\ProductsResource;
 
 /**
  * Builds a fully-wired API client from the transport dependencies.

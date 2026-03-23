@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\ValueObjects;
 
 final class PaginationLinks
 {

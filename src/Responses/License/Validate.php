@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\License;
+namespace LiquidWeb\LicensingApiClient\Responses\License;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
-use StellarWP\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
-use StellarWP\LicensingApiClient\Responses\License\ValueObjects\ProductValidation;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
+use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\ProductValidation;
 
 /**
  * Represents the batch license validation response payload.

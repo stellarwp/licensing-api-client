@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\License\Alias;
+namespace LiquidWeb\LicensingApiClient\Responses\License\Alias;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents an alias removal response.

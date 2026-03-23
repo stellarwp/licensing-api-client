@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Contracts;
+namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
-use StellarWP\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
-use StellarWP\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
-use StellarWP\LicensingApiClient\Responses\Credit\BalanceCollection;
-use StellarWP\LicensingApiClient\Responses\Credit\RecordUsage;
-use StellarWP\LicensingApiClient\Responses\Credit\Refund;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
+use LiquidWeb\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
+use LiquidWeb\LicensingApiClient\Responses\Credit\BalanceCollection;
+use LiquidWeb\LicensingApiClient\Responses\Credit\RecordUsage;
+use LiquidWeb\LicensingApiClient\Responses\Credit\Refund;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Defines the root credits resource surface.

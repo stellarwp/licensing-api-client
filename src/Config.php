@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient;
+namespace LiquidWeb\LicensingApiClient;
 
 use InvalidArgumentException;
-use StellarWP\LicensingApiClient\Http\RetryPolicy;
-use StellarWP\LicensingApiClient\Value\AuthToken;
+use LiquidWeb\LicensingApiClient\Http\RetryPolicy;
+use LiquidWeb\LicensingApiClient\Value\AuthToken;
 
 /**
  * Stores stable client configuration shared across API requests.
@@ -32,7 +32,7 @@ final class Config
 		?string $restNamespace = null
 	) {
 		$baseUri       = rtrim($baseUri, '/');
-		$restNamespace = trim(($restNamespace ?? 'stellarwp'), '/');
+		$restNamespace = trim(($restNamespace ?? 'liquidweb'), '/');
 
 		if ($baseUri === '') {
 			throw new InvalidArgumentException('Base URI cannot be empty.');

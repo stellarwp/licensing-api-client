@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Contracts;
+namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
 use Generator;
-use StellarWP\LicensingApiClient\Requests\Credit\ListLedgerEntries;
-use StellarWP\LicensingApiClient\Responses\Credit\LedgerPage;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Requests\Credit\ListLedgerEntries;
+use LiquidWeb\LicensingApiClient\Responses\Credit\LedgerPage;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Defines the credits ledger resource surface.

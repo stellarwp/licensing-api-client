@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Http;
+namespace LiquidWeb\LicensingApiClient\Http;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Value\AuthToken;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamFactoryInterface;
-use StellarWP\LicensingApiClient\Value\AuthToken;
 
 /**
  * Builds PSR-7 requests from SDK configuration and endpoint input.

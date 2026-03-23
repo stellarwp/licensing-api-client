@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses;
+namespace LiquidWeb\LicensingApiClient\Responses;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents a standard API business error response.

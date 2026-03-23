@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\License\Alias;
+namespace LiquidWeb\LicensingApiClient\Requests\License\Alias;
 
 use InvalidArgumentException;
 

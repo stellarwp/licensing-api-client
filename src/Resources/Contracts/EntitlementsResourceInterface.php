@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Contracts;
+namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
-use StellarWP\LicensingApiClient\Requests\Entitlement\Upsert;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Cancel;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Delete;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Suspend;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Unsuspend;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Requests\Entitlement\Upsert;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Cancel;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Delete;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Suspend;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Unsuspend;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Defines the entitlements resource surface.

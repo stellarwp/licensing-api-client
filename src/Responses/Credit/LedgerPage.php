@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Credit;
+namespace LiquidWeb\LicensingApiClient\Responses\Credit;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
-use StellarWP\LicensingApiClient\Responses\Credit\ValueObjects\LedgerEntry;
-use StellarWP\LicensingApiClient\Responses\ValueObjects\PageMeta;
-use StellarWP\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\LedgerEntry;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PageMeta;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
 
 /**
  * Represents a cursor-paginated credits ledger response.

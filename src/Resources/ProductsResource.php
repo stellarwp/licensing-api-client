@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources;
+namespace LiquidWeb\LicensingApiClient\Resources;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Responses\Product\Catalog;
 use Psr\Http\Client\ClientExceptionInterface;
-use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
-use StellarWP\LicensingApiClient\Responses\Product\Catalog;
 
 /**
  * Provides operations for the products API resource.

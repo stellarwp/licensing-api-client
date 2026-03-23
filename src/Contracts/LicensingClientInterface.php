@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Contracts;
+namespace LiquidWeb\LicensingApiClient\Contracts;
 
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
 
 /**
  * Defines the root entrypoint for the Licensing API client.

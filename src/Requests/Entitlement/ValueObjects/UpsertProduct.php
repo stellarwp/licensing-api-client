@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\Entitlement\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Requests\Entitlement\ValueObjects;
 
 /**
  * Represents one entitlement mutation inside an upsert request.

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\License\Alias;
+namespace LiquidWeb\LicensingApiClient\Requests\License\Alias;
 
-use StellarWP\LicensingApiClient\Requests\License\Alias\ValueObjects\ImportAlias;
+use LiquidWeb\LicensingApiClient\Requests\License\Alias\ValueObjects\ImportAlias;
 
 /**
  * Represents an alias import request payload.

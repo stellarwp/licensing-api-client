@@ -1,33 +1,33 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources;
+namespace LiquidWeb\LicensingApiClient\Resources;
 
 use Generator;
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Requests\License\Activate as ActivateRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\Alias\ImportAliases as ImportAliasesRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\Alias\RemoveAliases as RemoveAliasesRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\Deactivate as DeactivateRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\LicenseReference;
+use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey as RegenerateKeyRequest;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\Activate;
+use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases;
+use LiquidWeb\LicensingApiClient\Responses\License\Alias\RemoveAliases;
+use LiquidWeb\LicensingApiClient\Responses\License\Deactivate;
+use LiquidWeb\LicensingApiClient\Responses\License\Listing\Listing;
+use LiquidWeb\LicensingApiClient\Responses\License\RegenerateKey;
+use LiquidWeb\LicensingApiClient\Responses\License\StatusChange;
+use LiquidWeb\LicensingApiClient\Responses\License\Validate;
 use Psr\Http\Client\ClientExceptionInterface;
-use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Requests\License\Activate as ActivateRequest;
-use StellarWP\LicensingApiClient\Requests\License\Alias\ImportAliases as ImportAliasesRequest;
-use StellarWP\LicensingApiClient\Requests\License\Alias\RemoveAliases as RemoveAliasesRequest;
-use StellarWP\LicensingApiClient\Requests\License\Deactivate as DeactivateRequest;
-use StellarWP\LicensingApiClient\Requests\License\LicenseReference;
-use StellarWP\LicensingApiClient\Requests\License\Listing\ListRequest;
-use StellarWP\LicensingApiClient\Requests\License\RegenerateKey as RegenerateKeyRequest;
-use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
-use StellarWP\LicensingApiClient\Responses\License\Activate;
-use StellarWP\LicensingApiClient\Responses\License\Alias\ImportAliases;
-use StellarWP\LicensingApiClient\Responses\License\Alias\RemoveAliases;
-use StellarWP\LicensingApiClient\Responses\License\Deactivate;
-use StellarWP\LicensingApiClient\Responses\License\Listing\Listing;
-use StellarWP\LicensingApiClient\Responses\License\RegenerateKey;
-use StellarWP\LicensingApiClient\Responses\License\StatusChange;
-use StellarWP\LicensingApiClient\Responses\License\Validate;
 
 /**
  * Provides operations for the licenses API resource.

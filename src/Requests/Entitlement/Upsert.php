@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Requests\Entitlement;
+namespace LiquidWeb\LicensingApiClient\Requests\Entitlement;
 
-use StellarWP\LicensingApiClient\Requests\Entitlement\ValueObjects\UpsertProduct;
+use LiquidWeb\LicensingApiClient\Requests\Entitlement\ValueObjects\UpsertProduct;
 
 /**
  * Represents an upsert entitlements request payload.

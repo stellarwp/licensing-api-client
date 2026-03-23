@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Http;
+namespace LiquidWeb\LicensingApiClient\Http;
 
 use InvalidArgumentException;
 use Stringable;
@@ -10,7 +10,7 @@ use Stringable;
  */
 final class ApiVersion implements Stringable
 {
-	public const V4 = 'v4';
+	public const V1 = 'v1';
 
 	private string $value;
 
@@ -30,7 +30,7 @@ final class ApiVersion implements Stringable
 
 	public static function default(): self
 	{
-		return new self(self::V4);
+		return new self(self::V1);
 	}
 
 	public function value(): string

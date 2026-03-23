@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\License\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\License\ValueObjects;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents the validation outcome for one requested product.

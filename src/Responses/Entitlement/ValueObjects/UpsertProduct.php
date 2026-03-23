@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Responses\Entitlement\ValueObjects;
+namespace LiquidWeb\LicensingApiClient\Responses\Entitlement\ValueObjects;
 
-use StellarWP\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
  * Represents one product result inside an entitlement upsert response.

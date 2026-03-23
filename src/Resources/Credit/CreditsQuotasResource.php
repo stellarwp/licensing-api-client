@@ -1,26 +1,26 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Credit;
+namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Requests\Credit\SetQuota;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
+use LiquidWeb\LicensingApiClient\Responses\Credit\DeleteQuota;
+use LiquidWeb\LicensingApiClient\Responses\Credit\QuotaCollection;
+use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\SiteQuota;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
-use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Requests\Credit\SetQuota;
-use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
-use StellarWP\LicensingApiClient\Responses\Credit\DeleteQuota;
-use StellarWP\LicensingApiClient\Responses\Credit\QuotaCollection;
-use StellarWP\LicensingApiClient\Responses\Credit\ValueObjects\SiteQuota;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Provides operations for the credits quotas API resource.
  *
- * @phpstan-import-type SetQuotaPayload from \StellarWP\LicensingApiClient\Requests\Credit\SetQuota
+ * @phpstan-import-type SetQuotaPayload from \LiquidWeb\LicensingApiClient\Requests\Credit\SetQuota
  * @phpstan-type SiteQuotaPayload array{
  *     domain: string,
  *     credit_type: string,

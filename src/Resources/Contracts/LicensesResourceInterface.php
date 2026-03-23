@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources\Contracts;
+namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
 use Generator;
-use StellarWP\LicensingApiClient\Requests\License\Activate;
-use StellarWP\LicensingApiClient\Requests\License\Alias\ImportAliases;
-use StellarWP\LicensingApiClient\Requests\License\Alias\RemoveAliases;
-use StellarWP\LicensingApiClient\Requests\License\Deactivate;
-use StellarWP\LicensingApiClient\Requests\License\LicenseReference;
-use StellarWP\LicensingApiClient\Requests\License\Listing\ListRequest;
-use StellarWP\LicensingApiClient\Requests\License\RegenerateKey;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
-use StellarWP\LicensingApiClient\Responses\License\Activate as ActivateResponse;
-use StellarWP\LicensingApiClient\Responses\License\Alias\ImportAliases as ImportAliasesResponse;
-use StellarWP\LicensingApiClient\Responses\License\Alias\RemoveAliases as RemoveAliasesResponse;
-use StellarWP\LicensingApiClient\Responses\License\Deactivate as DeactivateResponse;
-use StellarWP\LicensingApiClient\Responses\License\Listing\Listing;
-use StellarWP\LicensingApiClient\Responses\License\RegenerateKey as RegenerateKeyResponse;
-use StellarWP\LicensingApiClient\Responses\License\StatusChange;
-use StellarWP\LicensingApiClient\Responses\License\Validate;
+use LiquidWeb\LicensingApiClient\Requests\License\Activate;
+use LiquidWeb\LicensingApiClient\Requests\License\Alias\ImportAliases;
+use LiquidWeb\LicensingApiClient\Requests\License\Alias\RemoveAliases;
+use LiquidWeb\LicensingApiClient\Requests\License\Deactivate;
+use LiquidWeb\LicensingApiClient\Requests\License\LicenseReference;
+use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\Activate as ActivateResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases as ImportAliasesResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\Alias\RemoveAliases as RemoveAliasesResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\Deactivate as DeactivateResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\Listing\Listing;
+use LiquidWeb\LicensingApiClient\Responses\License\RegenerateKey as RegenerateKeyResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\StatusChange;
+use LiquidWeb\LicensingApiClient\Responses\License\Validate;
 
 /**
  * Defines the licenses resource surface.

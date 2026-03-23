@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient\Resources;
+namespace LiquidWeb\LicensingApiClient\Resources;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\RequestBuilder;
+use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Requests\Entitlement\Upsert as UpsertRequest;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Cancel;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Delete;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Suspend;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Unsuspend;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
+use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
-use StellarWP\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use StellarWP\LicensingApiClient\Exceptions\UnexpectedResponseException;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Http\Factories\ApiUriFactory;
-use StellarWP\LicensingApiClient\Http\RequestBuilder;
-use StellarWP\LicensingApiClient\Http\RequestExecutor;
-use StellarWP\LicensingApiClient\Requests\Entitlement\Upsert as UpsertRequest;
-use StellarWP\LicensingApiClient\Resources\Concerns\RebindsAuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Cancel;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Delete;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Suspend;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Unsuspend;
-use StellarWP\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
-use StellarWP\LicensingApiClient\Responses\ErrorResponse;
 
 /**
  * Provides operations for the entitlements API resource.

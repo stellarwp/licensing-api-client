@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace StellarWP\LicensingApiClient;
+namespace LiquidWeb\LicensingApiClient;
 
-use StellarWP\LicensingApiClient\Contracts\LicensingClientInterface;
-use StellarWP\LicensingApiClient\Http\AuthState;
-use StellarWP\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
-use StellarWP\LicensingApiClient\Resources\Credit\CreditsResource;
-use StellarWP\LicensingApiClient\Resources\EntitlementsResource;
-use StellarWP\LicensingApiClient\Resources\LicensesResource;
-use StellarWP\LicensingApiClient\Resources\ProductsResource;
+use LiquidWeb\LicensingApiClient\Contracts\LicensingClientInterface;
+use LiquidWeb\LicensingApiClient\Http\AuthState;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsResource;
+use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
+use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
+use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
 
 /**
  * Exposes the built API resources and immutable auth-state transitions.
