@@ -12,20 +12,20 @@ final class ApiVersion implements Stringable
 {
 	public const V1 = 'v1';
 
-	private string $value;
+	private string $version;
 
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(string $value)
+	public function __construct(string $version)
 	{
-		$value = trim($value, '/');
+		$version = trim($version, '/');
 
-		if ($value === '') {
+		if ($version === '') {
 			throw new InvalidArgumentException('API version cannot be empty.');
 		}
 
-		$this->value = $value;
+		$this->version = $version;
 	}
 
 	public static function default(): self
@@ -33,13 +33,13 @@ final class ApiVersion implements Stringable
 		return new self(self::V1);
 	}
 
-	public function value(): string
+	public function get(): string
 	{
-		return $this->value;
+		return $this->version;
 	}
 
 	public function __toString(): string
 	{
-		return $this->value;
+		return $this->version;
 	}
 }

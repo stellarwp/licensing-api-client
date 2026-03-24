@@ -91,7 +91,7 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 			$this->apiUriFactory->make('/credits/ledger'),
 			$query,
 			null,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -123,7 +123,7 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 				$this->apiUriFactory->fromPaginationLink($page->links->next),
 				[],
 				null,
-				$this->authState->resolveRequiredTokenOrFail()
+				$this->authState->requiredToken()
 			);
 
 			if ($result instanceof ErrorResponse) {

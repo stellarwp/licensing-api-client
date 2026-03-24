@@ -17,9 +17,11 @@ final class Config
 
 	public string $userAgent;
 
+	public RetryPolicy $retryPolicy;
+
 	public string $restNamespace;
 
-	public RetryPolicy $retryPolicy;
+	public string $apiRoot;
 
 	/**
 	 * @throws InvalidArgumentException
@@ -29,13 +31,19 @@ final class Config
 		?string $configuredToken = null,
 		?string $userAgent = null,
 		?RetryPolicy $retryPolicy = null,
-		?string $restNamespace = null
+		?string $restNamespace = null,
+		?string $apiRoot = null
 	) {
 		$baseUri       = rtrim($baseUri, '/');
+		$apiRoot       = trim(($apiRoot ?? 'api'), '/');
 		$restNamespace = trim(($restNamespace ?? 'liquidweb'), '/');
 
 		if ($baseUri === '') {
 			throw new InvalidArgumentException('Base URI cannot be empty.');
+		}
+
+		if ($apiRoot === '') {
+			throw new InvalidArgumentException('API root cannot be empty.');
 		}
 
 		if ($restNamespace === '') {
@@ -45,6 +53,7 @@ final class Config
 		$this->baseUri         = $baseUri;
 		$this->configuredToken = $configuredToken !== null ? new AuthToken($configuredToken) : null;
 		$this->userAgent       = $userAgent !== null && $userAgent !== '' ? $userAgent : 'stellarwp/licensing-api-client';
+		$this->apiRoot         = $apiRoot;
 		$this->restNamespace   = $restNamespace;
 		$this->retryPolicy     = $retryPolicy ?: RetryPolicy::default();
 	}
@@ -55,7 +64,8 @@ final class Config
 	 *     configured_token?: non-empty-string|null,
 	 *     user_agent?: non-empty-string|null,
 	 *     retry_policy?: RetryPolicy|null,
-	 *     rest_namespace?: non-empty-string|null
+	 *     rest_namespace?: non-empty-string|null,
+	 *     api_root?: non-empty-string|null
 	 * } $config
 	 *
 	 * @throws InvalidArgumentException
@@ -66,12 +76,13 @@ final class Config
 			$config['configured_token'] ?? null,
 			$config['user_agent'] ?? null,
 			$config['retry_policy'] ?? null,
-			$config['rest_namespace'] ?? null
+			$config['rest_namespace'] ?? null,
+			$config['api_root'] ?? null
 		);
 	}
 
 	public function apiRootPath(): string
 	{
-		return '/wp-json/' . $this->restNamespace;
+		return '/' . $this->apiRoot;
 	}
 }

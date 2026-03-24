@@ -2,6 +2,7 @@
 
 namespace LiquidWeb\LicensingApiClient\Http;
 
+use InvalidArgumentException;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Value\AuthToken;
 
@@ -12,25 +13,42 @@ final class AuthState
 {
 	private AuthContext $authContext;
 
-	private ?AuthToken $configuredToken;
+	private ?AuthToken $token;
 
-	public function __construct(AuthContext $authContext, ?AuthToken $configuredToken = null) {
-		$this->authContext     = $authContext;
-		$this->configuredToken = $configuredToken;
+	/**
+	 * @throws InvalidArgumentException
+	 */
+	public function __construct(AuthContext $authContext, ?AuthToken $token = null) {
+		if ($authContext->mode() === AuthContext::MODE_EXPLICIT && $token === null) {
+			throw new InvalidArgumentException('Explicit auth mode requires a token.');
+		}
+
+		$this->authContext = $authContext;
+		$this->token       = $token;
 	}
 
 	/**
 	 * @throws MissingAuthenticationException
 	 */
-	public function resolveTokenOrFail(): ?AuthToken {
-		return $this->authContext->resolveTokenOrFail($this->configuredToken);
+	public function optionalToken(): ?AuthToken {
+		if ($this->authContext->mode() === AuthContext::MODE_NONE) {
+			return null;
+		}
+
+		if ($this->authContext->mode() === AuthContext::MODE_CONFIGURED && $this->token === null) {
+			throw new MissingAuthenticationException(
+				'This request requires authentication, but no token is available.'
+			);
+		}
+
+		return $this->token;
 	}
 
 	/**
 	 * @throws MissingAuthenticationException
 	 */
-	public function resolveRequiredTokenOrFail(): AuthToken {
-		$token = $this->resolveTokenOrFail();
+	public function requiredToken(): AuthToken {
+		$token = $this->optionalToken();
 
 		if ($token === null) {
 			throw new MissingAuthenticationException(
@@ -42,30 +60,39 @@ final class AuthState
 	}
 
 	public function withoutAuth(): self {
-		return $this->withAuthContext(new AuthContext(AuthContext::MODE_NONE));
+		return $this->withAuthContext(new AuthContext(AuthContext::MODE_NONE), $this->token);
 	}
 
 	public function withConfiguredToken(): self {
-		return $this->withAuthContext(new AuthContext(AuthContext::MODE_CONFIGURED));
+		return $this->withAuthContext(new AuthContext(AuthContext::MODE_CONFIGURED), $this->token);
 	}
 
-	public function withExplicitToken(string $token): self {
-		return $this->withAuthContext(new AuthContext(AuthContext::MODE_EXPLICIT, $token));
+	public function withToken(string $token): self {
+		return $this->withAuthContext(
+			new AuthContext(AuthContext::MODE_EXPLICIT),
+			new AuthToken($token)
+		);
 	}
 
 	public function authContext(): AuthContext {
 		return $this->authContext;
 	}
 
-	public function configuredToken(): ?AuthToken {
-		return $this->configuredToken;
+	public function token(): ?AuthToken {
+		return $this->token;
 	}
 
-	private function withAuthContext(AuthContext $authContext): self {
-		if ($this->authContext->equals($authContext)) {
+	private function withAuthContext(AuthContext $authContext, ?AuthToken $token): self {
+		if (
+			$this->authContext->equals($authContext)
+			&& (
+				($this->token === null && $token === null)
+				|| ($this->token !== null && $token !== null && $this->token->equals($token))
+			)
+		) {
 			return $this;
 		}
 
-		return new self($authContext, $this->configuredToken);
+		return new self($authContext, $token);
 	}
 }

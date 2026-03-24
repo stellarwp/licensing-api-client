@@ -77,7 +77,7 @@ final class ProductsResource implements ProductsResourceInterface
 				'domain' => $domain,
 			], static fn($value): bool => $value !== null),
 			null,
-			$this->authState->resolveTokenOrFail()
+			$this->authState->optionalToken()
 		);
 
 		if ($result instanceof ErrorResponse) {

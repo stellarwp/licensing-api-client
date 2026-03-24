@@ -126,7 +126,7 @@ final class CreditsResource implements CreditsResourceInterface
 				'sort'        => $sort,
 			], static fn ($value): bool => $value !== null),
 			null,
-			$this->authState->resolveTokenOrFail()
+			$this->authState->optionalToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -154,7 +154,7 @@ final class CreditsResource implements CreditsResourceInterface
 			$this->apiUriFactory->make('/credits/usage'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail(),
+			$this->authState->requiredToken(),
 			[
 				'X-Idempotency-Key' => $request->idempotencyKey,
 			]
@@ -185,7 +185,7 @@ final class CreditsResource implements CreditsResourceInterface
 			$this->apiUriFactory->make('/credits/refunds'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail(),
+			$this->authState->requiredToken(),
 			[
 				'X-Idempotency-Key' => $request->idempotencyKey,
 			]

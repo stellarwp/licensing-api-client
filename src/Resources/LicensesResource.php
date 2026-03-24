@@ -165,7 +165,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/activate'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -193,7 +193,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/deactivate'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -218,7 +218,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses'),
 			$request->toQuery(),
 			null,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -250,7 +250,7 @@ final class LicensesResource implements LicensesResourceInterface
 				$this->apiUriFactory->fromPaginationLink($page->links->next),
 				[],
 				null,
-				$this->authState->resolveRequiredTokenOrFail()
+				$this->authState->requiredToken()
 			);
 
 			if ($result instanceof ErrorResponse) {
@@ -275,7 +275,7 @@ final class LicensesResource implements LicensesResourceInterface
 	 * @return Validate|ErrorResponse
 	 */
 	public function validate(string $key, array $productSlugs, string $domain) {
-		$token = $this->authState->resolveTokenOrFail();
+		$token = $this->authState->optionalToken();
 
 		$result = $this->requestExecutor->executeJson(
 			'POST',
@@ -350,7 +350,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/regenerate-key'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -378,7 +378,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/aliases'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -406,7 +406,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/aliases'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -434,7 +434,7 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make($path),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {

@@ -86,7 +86,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 				'active' => $active,
 			],
 			null,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -114,7 +114,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -142,7 +142,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -170,7 +170,7 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {

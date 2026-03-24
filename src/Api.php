@@ -77,6 +77,6 @@ final class Api implements LicensingClientInterface
 	}
 
 	public function withToken(string $token): LicensingClientInterface {
-		return $this->cloneWithAuthState($this->authState->withExplicitToken($token));
+		return $this->cloneWithAuthState($this->authState->withToken($token));
 	}
 }

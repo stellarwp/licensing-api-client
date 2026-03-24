@@ -65,7 +65,7 @@ final class RequestBuilder
 	): RequestInterface {
 
 		if ($token !== null) {
-			$request = $request->withHeader('X-LWS-Token', $token->value());
+			$request = $request->withHeader('X-LWS-Token', $token->get());
 		}
 
 		foreach ($headers as $name => $value) {
@@ -86,7 +86,7 @@ final class RequestBuilder
 	 * @param array<string, QueryValue> $query
 	 */
 	private function buildUri(ApiUri $uri, array $query): string {
-		$uri = $uri->uri();
+		$uri = $uri->get();
 
 		$queryString = http_build_query(array_filter($query, static function ($value): bool {
 			return $value !== null;

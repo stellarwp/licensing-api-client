@@ -82,7 +82,7 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->apiUriFactory->make('/entitlements'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -111,7 +111,7 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 				'product_slug' => $productSlug,
 				'tier'         => $tier,
 			],
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -140,7 +140,7 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 				'product_slug' => $productSlug,
 				'tier'         => $tier,
 			],
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -172,7 +172,7 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->apiUriFactory->make('/entitlements/cancel'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -201,7 +201,7 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 				'product_slug' => $productSlug,
 				'tier'         => $tier,
 			],
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {

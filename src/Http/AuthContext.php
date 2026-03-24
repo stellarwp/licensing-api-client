@@ -3,8 +3,6 @@
 namespace LiquidWeb\LicensingApiClient\Http;
 
 use InvalidArgumentException;
-use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
-use LiquidWeb\LicensingApiClient\Value\AuthToken;
 
 /**
  * Represents the authentication mode the API client should use for a request.
@@ -18,21 +16,13 @@ final class AuthContext
 
 	private string $mode;
 
-	private ?AuthToken $token;
-
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(string $mode = self::MODE_AUTO, ?string $token = null) {
+	public function __construct(string $mode = self::MODE_AUTO) {
 		$this->assertValidMode($mode);
-		$token = $this->normalizeToken($token);
 
-		if ($mode === self::MODE_EXPLICIT && $token === null) {
-			throw new InvalidArgumentException('Explicit auth mode requires a token.');
-		}
-
-		$this->mode  = $mode;
-		$this->token = $token;
+		$this->mode = $mode;
 	}
 
 	/**
@@ -51,58 +41,15 @@ final class AuthContext
 		}
 	}
 
-	private function normalizeToken(?string $token): ?AuthToken {
-		if ($token === null) {
-			return null;
-		}
-
-		try {
-			return new AuthToken($token);
-		} catch (InvalidArgumentException $exception) {
-			return null;
-		}
-	}
-
-	/**
-	 * @throws MissingAuthenticationException
-	 */
-	public function resolveTokenOrFail(?AuthToken $configuredToken): ?AuthToken {
-		if ($this->mode === self::MODE_NONE) {
-			return null;
-		}
-
-		if ($this->mode === self::MODE_EXPLICIT) {
-			return $this->token;
-		}
-
-		if ($this->mode === self::MODE_CONFIGURED && $configuredToken === null) {
-			throw new MissingAuthenticationException(
-				'This request requires authentication, but no token is available.'
-			);
-		}
-
-		return $configuredToken;
-	}
-
 	public function requiresToken(): bool {
 		return $this->mode === self::MODE_CONFIGURED || $this->mode === self::MODE_EXPLICIT;
 	}
 
 	public function equals(self $authContext): bool {
-		return $this->mode === $authContext->mode()
-			&& (
-				($this->token === null && $authContext->token() === null)
-				|| ($this->token !== null && $authContext->token() !== null && $this->token->equals(
-						$authContext->token()
-					))
-			);
+		return $this->mode === $authContext->mode();
 	}
 
 	public function mode(): string {
 		return $this->mode;
-	}
-
-	public function token(): ?AuthToken {
-		return $this->token;
 	}
 }

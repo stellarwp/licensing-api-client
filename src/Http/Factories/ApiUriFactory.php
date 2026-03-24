@@ -33,7 +33,9 @@ final class ApiUriFactory
 			rtrim($this->config->baseUri, '/')
 			. $this->config->apiRootPath()
 			. '/'
-			. $version->value()
+			. $this->config->restNamespace
+			. '/'
+			. $version->get()
 			. '/'
 			. ltrim($path, '/')
 		);
@@ -67,7 +69,7 @@ final class ApiUriFactory
 			throw new UnexpectedResponseException('Unexpected pagination link origin.');
 		}
 
-		if (strpos($targetPath, $this->config->apiRootPath() . '/') !== 0) {
+		if (strpos($targetPath, $this->config->apiRootPath() . '/' . $this->config->restNamespace . '/') !== 0) {
 			throw new UnexpectedResponseException('Unexpected pagination link path.');
 		}
 

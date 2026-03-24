@@ -9,26 +9,26 @@ use InvalidArgumentException;
  */
 final class AuthToken
 {
-	private string $value;
+	private string $token;
 
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(string $value) {
-		$value = trim($value);
+	public function __construct(string $token) {
+		$token = trim($token);
 
-		if ($value === '') {
+		if ($token === '') {
 			throw new InvalidArgumentException('Authentication token cannot be empty.');
 		}
 
-		$this->value = $value;
+		$this->token = $token;
 	}
 
 	public function equals(self $authToken): bool {
-		return $this->value === $authToken->value();
+		return $this->token === $authToken->get();
 	}
 
-	public function value(): string {
-		return $this->value;
+	public function get(): string {
+		return $this->token;
 	}
 }

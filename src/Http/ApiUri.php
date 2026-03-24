@@ -14,7 +14,7 @@ final class ApiUri
 		$this->uri = $uri;
 	}
 
-	public function uri(): string
+	public function get(): string
 	{
 		return $this->uri;
 	}

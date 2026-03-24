@@ -77,7 +77,7 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 				'key' => $key,
 			],
 			null,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -105,7 +105,7 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 			$this->apiUriFactory->make('/credits/quotas'),
 			[],
 			$body,
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
@@ -134,7 +134,7 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 				'domain'      => $domain,
 				'credit_type' => $creditType,
 			],
-			$this->authState->resolveRequiredTokenOrFail()
+			$this->authState->requiredToken()
 		);
 
 		if ($result instanceof ErrorResponse) {
