@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
 
 /**
  * Represents the entitlement returned by a license activation.
@@ -33,21 +34,15 @@ final class ActivationEntitlement implements Response
 
 	public string $status;
 
-	/**
-	 * @var string[]
-	 */
-	public array $capabilities;
+	public CapabilityCollection $capabilities;
 
-	/**
-	 * @param string[] $capabilities
-	 */
 	private function __construct(
 		string $productSlug,
 		string $tier,
 		int $siteLimit,
 		DateTimeImmutable $expirationDate,
 		string $status,
-		array $capabilities
+		CapabilityCollection $capabilities
 	) {
 		$this->productSlug    = $productSlug;
 		$this->tier           = $tier;
@@ -76,7 +71,7 @@ final class ActivationEntitlement implements Response
 			$attributes['site_limit'],
 			self::parseDateTime($attributes['expiration_date']),
 			$attributes['status'],
-			$attributes['capabilities']
+			CapabilityCollection::from($attributes['capabilities'])
 		);
 	}
 
@@ -97,7 +92,7 @@ final class ActivationEntitlement implements Response
 			'site_limit'      => $this->siteLimit,
 			'expiration_date' => $this->expirationDate->format('Y-m-d H:i:s'),
 			'status'          => $this->status,
-			'capabilities'    => $this->capabilities,
+			'capabilities'    => $this->capabilities->toArray(),
 		];
 	}
 }

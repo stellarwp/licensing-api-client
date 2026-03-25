@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
 
 /**
  * Represents an entitlement option when tier selection is required.
@@ -32,22 +33,18 @@ final class AvailableEntitlement implements Response
 
 	public int $available;
 
-	/** @var list<string> */
-	public array $capabilities;
+	public CapabilityCollection $capabilities;
 
 	public string $status;
 
 	public DateTimeImmutable $expires;
 
-	/**
-	 * @param list<string> $capabilities
-	 */
 	private function __construct(
 		string $tier,
 		int $siteLimit,
 		int $activeCount,
 		int $available,
-		array $capabilities,
+		CapabilityCollection $capabilities,
 		string $status,
 		DateTimeImmutable $expires
 	) {
@@ -79,7 +76,7 @@ final class AvailableEntitlement implements Response
 			$attributes['site_limit'],
 			$attributes['active_count'],
 			$attributes['available'],
-			$attributes['capabilities'],
+			CapabilityCollection::from($attributes['capabilities']),
 			$attributes['status'],
 			self::parseDateTime($attributes['expires'])
 		);
@@ -91,7 +88,7 @@ final class AvailableEntitlement implements Response
 			'site_limit'   => $this->siteLimit,
 			'active_count' => $this->activeCount,
 			'available'    => $this->available,
-			'capabilities' => $this->capabilities,
+			'capabilities' => $this->capabilities->toArray(),
 			'status'       => $this->status,
 			'expires'      => $this->expires->format('Y-m-d H:i:s'),
 		];

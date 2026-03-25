@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
 
 /**
  * Represents one entitlement entry in the product catalog.
@@ -39,8 +40,7 @@ final class CatalogEntry implements Response
 
 	public DateTimeImmutable $expires;
 
-	/** @var list<string> */
-	public array $capabilities;
+	public CapabilityCollection $capabilities;
 
 	public Activations $activations;
 
@@ -51,14 +51,13 @@ final class CatalogEntry implements Response
 	public ?bool $isValid;
 
 	/**
-	 * @param list<string> $capabilities
 	 */
 	private function __construct(
 		string $productSlug,
 		string $tier,
 		string $status,
 		DateTimeImmutable $expires,
-		array $capabilities,
+		CapabilityCollection $capabilities,
 		Activations $activations,
 		?bool $activatedHere = null,
 		?string $validationStatus = null,
@@ -101,7 +100,7 @@ final class CatalogEntry implements Response
 			$attributes['tier'],
 			$attributes['status'],
 			self::parseDateTime($attributes['expires']),
-			$attributes['capabilities'],
+			CapabilityCollection::from($attributes['capabilities']),
 			Activations::from($attributes['activations']),
 			$attributes['activated_here'] ?? null,
 			$attributes['validation_status'] ?? null,
@@ -115,7 +114,7 @@ final class CatalogEntry implements Response
 			'tier'         => $this->tier,
 			'status'       => $this->status,
 			'expires'      => $this->expires->format('Y-m-d H:i:s'),
-			'capabilities' => $this->capabilities,
+			'capabilities' => $this->capabilities->toArray(),
 			'activations'  => $this->activations->toArray(),
 		], array_filter([
 			'activated_here'    => $this->activatedHere,

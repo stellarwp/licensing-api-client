@@ -2,7 +2,16 @@
 
 namespace LiquidWeb\LicensingApiClient\Responses\ValueObjects;
 
-final class PageMeta
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+
+/**
+ * @implements Response<array{
+ *     total: int,
+ *     limit: int,
+ *     max_size: int
+ * }>
+ */
+final class PageMeta implements Response
 {
 	public int $total;
 

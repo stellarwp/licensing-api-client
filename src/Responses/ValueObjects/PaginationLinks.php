@@ -2,7 +2,17 @@
 
 namespace LiquidWeb\LicensingApiClient\Responses\ValueObjects;
 
-final class PaginationLinks
+use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+
+/**
+ * @implements Response<array{
+ *     first: string,
+ *     last: string|null,
+ *     prev: string|null,
+ *     next: string|null
+ * }>
+ */
+final class PaginationLinks implements Response
 {
 	public string $first;
 

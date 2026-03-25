@@ -83,12 +83,12 @@ final class ProductValidation implements Response
 	 *         domain: string,
 	 *         activated_at: string
 	 *     }|null,
-	 *     available_entitlements?: list<array{
-	 *         tier: string,
-	 *         site_limit: int,
-	 *         active_count: int,
-	 *         available: int,
-	 *         capabilities: list<string>,
+ *     available_entitlements?: list<array{
+ *         tier: string,
+ *         site_limit: int,
+ *         active_count: int,
+ *         available: int,
+ *         capabilities: list<string>,
 	 *         status: string,
 	 *         expires: string
 	 *     }>
