@@ -3,9 +3,13 @@
 namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
 use Generator;
+use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Requests\Credit\ListLedgerEntries;
 use LiquidWeb\LicensingApiClient\Responses\Credit\LedgerPage;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Defines the credits ledger resource surface.
@@ -13,12 +17,22 @@ use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 interface CreditsLedgerResourceInterface
 {
 	/**
-	 * @return LedgerPage|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function list(ListLedgerEntries $request);
+	public function list(ListLedgerEntries $request): LedgerPage;
 
 	/**
-	 * @return Generator<int, LedgerPage|ErrorResponse, mixed, void>
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 *
+	 * @return Generator<int, LedgerPage, mixed, void>
 	 */
 	public function pages(ListLedgerEntries $request): Generator;
 }

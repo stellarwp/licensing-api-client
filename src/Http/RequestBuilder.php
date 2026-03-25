@@ -88,9 +88,7 @@ final class RequestBuilder
 	private function buildUri(ApiUri $uri, array $query): string {
 		$uri = $uri->get();
 
-		$queryString = http_build_query(array_filter($query, static function ($value): bool {
-			return $value !== null;
-		}));
+		$queryString = http_build_query(array_filter($query, static fn ($value): bool => $value !== null));
 
 		if ($queryString === '') {
 			return $uri;

@@ -16,19 +16,16 @@ final class ApiUriFactory
 
 	private ApiVersion $defaultVersion;
 
-	public function __construct(Config $config, ApiVersion $defaultVersion)
-	{
+	public function __construct(Config $config, ApiVersion $defaultVersion) {
 		$this->config         = $config;
 		$this->defaultVersion = $defaultVersion;
 	}
 
-	public function make(string $path): ApiUri
-	{
+	public function make(string $path): ApiUri {
 		return $this->makeWithVersion($path, $this->defaultVersion);
 	}
 
-	public function makeWithVersion(string $path, ApiVersion $version): ApiUri
-	{
+	public function makeWithVersion(string $path, ApiVersion $version): ApiUri {
 		return new ApiUri(
 			rtrim($this->config->baseUri, '/')
 			. $this->config->apiRootPath()
@@ -44,8 +41,7 @@ final class ApiUriFactory
 	/**
 	 * @throws UnexpectedResponseException
 	 */
-	public function fromPaginationLink(string $uri): ApiUri
-	{
+	public function fromPaginationLink(string $uri): ApiUri {
 		$target = parse_url($uri);
 		$base   = parse_url($this->config->baseUri);
 
@@ -81,8 +77,7 @@ final class ApiUriFactory
 	 *
 	 * @throws UnexpectedResponseException
 	 */
-	private function requireString(array $parts, string $key): string
-	{
+	private function requireString(array $parts, string $key): string {
 		$value = $parts[$key] ?? null;
 
 		if (! is_string($value)) {

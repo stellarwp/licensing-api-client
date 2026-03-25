@@ -4,6 +4,7 @@ namespace LiquidWeb\LicensingApiClient\Resources;
 
 use Generator;
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -18,7 +19,6 @@ use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey as RegenerateKeyRequest;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Activate;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\RemoveAliases;
@@ -144,19 +144,14 @@ final class LicensesResource implements LicensesResourceInterface
 		$this->authState       = $authState;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
-	}
-
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Activate|ErrorResponse
 	 */
-	public function activate(ActivateRequest $request) {
+	public function activate(ActivateRequest $request): Activate {
 		/** @var ActivatePayload $body */
 		$body = $request->toArray();
 
@@ -168,23 +163,18 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var ActivateResponsePayload $result */
 		return Activate::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Deactivate|ErrorResponse
 	 */
-	public function deactivate(DeactivateRequest $request) {
+	public function deactivate(DeactivateRequest $request): Deactivate {
 		/** @var DeactivatePayload $body */
 		$body = $request->toArray();
 
@@ -196,23 +186,18 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var DeactivateResponsePayload $result */
 		return Deactivate::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Listing|ErrorResponse
 	 */
-	public function list(ListRequest $request) {
+	public function list(ListRequest $request): Listing {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/licenses'),
@@ -221,19 +206,18 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var ListingPayload $result */
 		return Listing::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 *
-	 * @return Generator<int, Listing|ErrorResponse, mixed, void>
+	 * @return Generator<int, Listing, mixed, void>
 	 */
 	public function pages(ListRequest $request): Generator {
 		$page = $this->list($request);
@@ -241,7 +225,7 @@ final class LicensesResource implements LicensesResourceInterface
 		while (true) {
 			yield $page;
 
-			if ($page instanceof ErrorResponse || $page->links->next === null) {
+			if ($page->links->next === null) {
 				return;
 			}
 
@@ -253,12 +237,6 @@ final class LicensesResource implements LicensesResourceInterface
 				$this->authState->requiredToken()
 			);
 
-			if ($result instanceof ErrorResponse) {
-				yield $result;
-
-				return;
-			}
-
 			/** @var ListingPayload $result */
 			$page = Listing::from($result);
 		}
@@ -267,14 +245,13 @@ final class LicensesResource implements LicensesResourceInterface
 	/**
 	 * @param list<string> $productSlugs
 	 *
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Validate|ErrorResponse
 	 */
-	public function validate(string $key, array $productSlugs, string $domain) {
+	public function validate(string $key, array $productSlugs, string $domain): Validate {
 		$token = $this->authState->optionalToken();
 
 		$result = $this->requestExecutor->executeJson(
@@ -289,59 +266,51 @@ final class LicensesResource implements LicensesResourceInterface
 			$token
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var ValidatePayload $result */
 		return Validate::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return StatusChange|ErrorResponse
 	 */
-	public function suspend(LicenseReference $request) {
+	public function suspend(LicenseReference $request): StatusChange {
 		return $this->changeLicenseStatus('/licenses/suspend', $request);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return StatusChange|ErrorResponse
 	 */
-	public function reinstate(LicenseReference $request) {
+	public function reinstate(LicenseReference $request): StatusChange {
 		return $this->changeLicenseStatus('/licenses/reinstate', $request);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return StatusChange|ErrorResponse
 	 */
-	public function ban(LicenseReference $request) {
+	public function ban(LicenseReference $request): StatusChange {
 		return $this->changeLicenseStatus('/licenses/ban', $request);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return RegenerateKey|ErrorResponse
 	 */
-	public function regenerateKey(RegenerateKeyRequest $request) {
+	public function regenerateKey(RegenerateKeyRequest $request): RegenerateKey {
 		/** @var RegenerateKeyPayload $body */
 		$body = $request->toArray();
 
@@ -353,23 +322,18 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var RegenerateKeyResponsePayload $result */
 		return RegenerateKey::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return ImportAliases|ErrorResponse
 	 */
-	public function importAliases(ImportAliasesRequest $request) {
+	public function importAliases(ImportAliasesRequest $request): ImportAliases {
 		/** @var ImportAliasesPayload $body */
 		$body = $request->toArray();
 
@@ -381,23 +345,18 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var ImportAliasesResponsePayload $result */
 		return ImportAliases::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return RemoveAliases|ErrorResponse
 	 */
-	public function removeAliases(RemoveAliasesRequest $request) {
+	public function removeAliases(RemoveAliasesRequest $request): RemoveAliases {
 		/** @var RemoveAliasesPayload $body */
 		$body = $request->toArray();
 
@@ -409,23 +368,22 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var RemoveAliasesResponsePayload $result */
 		return RemoveAliases::from($result);
 	}
 
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
+	}
+
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return StatusChange|ErrorResponse
 	 */
-	private function changeLicenseStatus(string $path, LicenseReference $request) {
+	private function changeLicenseStatus(string $path, LicenseReference $request): StatusChange {
 		/** @var LicenseReferencePayload $body */
 		$body = $request->toArray();
 
@@ -436,10 +394,6 @@ final class LicensesResource implements LicensesResourceInterface
 			$body,
 			$this->authState->requiredToken()
 		);
-
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
 
 		/** @var StatusChangePayload $result */
 		return StatusChange::from($result);

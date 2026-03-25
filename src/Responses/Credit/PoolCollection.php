@@ -80,9 +80,7 @@ final class PoolCollection implements Response
 	 * }
 	 */
 	public function toArray(): array {
-		$pools = array_map(function ($pool) {
-			return $pool->toArray();
-		}, $this->pools);
+		$pools = array_map(static fn ($pool) => $pool->toArray(), $this->pools);
 
 		return [
 			'pools' => $pools,

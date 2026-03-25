@@ -118,9 +118,9 @@ final class CatalogEntry implements Response
 			'capabilities' => $this->capabilities,
 			'activations'  => $this->activations->toArray(),
 		], array_filter([
-			'activated_here'   => $this->activatedHere,
-			'validation_status'=> $this->validationStatus,
-			'is_valid'         => $this->isValid,
+			'activated_here'    => $this->activatedHere,
+			'validation_status' => $this->validationStatus,
+			'is_valid'          => $this->isValid,
 		], static fn ($value): bool => $value !== null));
 	}
 }

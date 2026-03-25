@@ -4,6 +4,7 @@ namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use Generator;
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -13,7 +14,6 @@ use LiquidWeb\LicensingApiClient\Requests\Credit\ListLedgerEntries;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsLedgerResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\Credit\LedgerPage;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -70,19 +70,14 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 		$this->authState       = $authState;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
-	}
-
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return LedgerPage|ErrorResponse
 	 */
-	public function list(ListLedgerEntries $request) {
+	public function list(ListLedgerEntries $request): LedgerPage {
 		/** @var ListLedgerEntriesQuery $query */
 		$query = $request->toQuery();
 
@@ -94,19 +89,18 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var LedgerPagePayload $result */
 		return LedgerPage::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 *
-	 * @return Generator<int, LedgerPage|ErrorResponse, mixed, void>
+	 * @return Generator<int, LedgerPage, mixed, void>
 	 */
 	public function pages(ListLedgerEntries $request): Generator {
 		$page = $this->list($request);
@@ -114,7 +108,7 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 		while (true) {
 			yield $page;
 
-			if ($page instanceof ErrorResponse || $page->links->next === null) {
+			if ($page->links->next === null) {
 				return;
 			}
 
@@ -126,14 +120,12 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 				$this->authState->requiredToken()
 			);
 
-			if ($result instanceof ErrorResponse) {
-				yield $result;
-
-				return;
-			}
-
 			/** @var LedgerPagePayload $result */
 			$page = LedgerPage::from($result);
 		}
+	}
+
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 }

@@ -3,6 +3,7 @@
 namespace LiquidWeb\LicensingApiClient\Resources;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -17,7 +18,6 @@ use LiquidWeb\LicensingApiClient\Responses\Entitlement\Delete;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Suspend;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Unsuspend;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -61,19 +61,14 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 		$this->authState       = $authState;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
-	}
-
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return UpsertResponse|ErrorResponse
 	 */
-	public function upsert(UpsertRequest $request) {
+	public function upsert(UpsertRequest $request): UpsertResponse {
 		/** @var JsonObject $body */
 		$body = $request->toArray();
 
@@ -85,23 +80,18 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var UpsertPayload $result */
 		return UpsertResponse::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Suspend|ErrorResponse
 	 */
-	public function suspend(string $key, string $productSlug, string $tier) {
+	public function suspend(string $key, string $productSlug, string $tier): Suspend {
 		$result = $this->requestExecutor->executeJson(
 			'POST',
 			$this->apiUriFactory->make('/entitlements/suspend'),
@@ -114,23 +104,18 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var EntitlementStatusPayload $result */
 		return Suspend::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Unsuspend|ErrorResponse
 	 */
-	public function unsuspend(string $key, string $productSlug, string $tier) {
+	public function unsuspend(string $key, string $productSlug, string $tier): Unsuspend {
 		$result = $this->requestExecutor->executeJson(
 			'POST',
 			$this->apiUriFactory->make('/entitlements/unsuspend'),
@@ -143,23 +128,18 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var EntitlementStatusPayload $result */
 		return Unsuspend::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Cancel|ErrorResponse
 	 */
-	public function cancel(string $key, string $productSlug, string $tier, ?string $reason = null) {
+	public function cancel(string $key, string $productSlug, string $tier, ?string $reason = null): Cancel {
 		$body = array_filter([
 			'key'          => $key,
 			'product_slug' => $productSlug,
@@ -175,23 +155,18 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var EntitlementStatusPayload $result */
 		return Cancel::from($result);
 	}
 
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Delete|ErrorResponse
 	 */
-	public function delete(string $key, string $productSlug, string $tier) {
+	public function delete(string $key, string $productSlug, string $tier): Delete {
 		$result = $this->requestExecutor->executeJson(
 			'DELETE',
 			$this->apiUriFactory->make('/entitlements'),
@@ -204,11 +179,11 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var DeletePayload $result */
 		return Delete::from($result);
+	}
+
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 }

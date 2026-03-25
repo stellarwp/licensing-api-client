@@ -2,11 +2,15 @@
 
 namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
+use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Requests\Credit\SetQuota;
 use LiquidWeb\LicensingApiClient\Responses\Credit\DeleteQuota;
 use LiquidWeb\LicensingApiClient\Responses\Credit\QuotaCollection;
 use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\SiteQuota;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Defines the credits quotas resource surface.
@@ -14,17 +18,29 @@ use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 interface CreditsQuotasResourceInterface
 {
 	/**
-	 * @return QuotaCollection|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function list(string $key);
+	public function list(string $key): QuotaCollection;
 
 	/**
-	 * @return SiteQuota|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function set(SetQuota $request);
+	public function set(SetQuota $request): SiteQuota;
 
 	/**
-	 * @return DeleteQuota|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function delete(string $key, string $domain, string $creditType);
+	public function delete(string $key, string $domain, string $creditType): DeleteQuota;
 }

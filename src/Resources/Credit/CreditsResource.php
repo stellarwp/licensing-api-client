@@ -3,6 +3,7 @@
 namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\ApiResponseException;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -18,7 +19,6 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\Credit\BalanceCollection;
 use LiquidWeb\LicensingApiClient\Responses\Credit\RecordUsage;
 use LiquidWeb\LicensingApiClient\Responses\Credit\Refund;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -96,26 +96,14 @@ final class CreditsResource implements CreditsResourceInterface
 		$this->ledger          = $ledger;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self(
-			$this->requestExecutor,
-			$this->apiUriFactory,
-			$authState,
-			$this->pools->withAuthState($authState),
-			$this->quotas->withAuthState($authState),
-			$this->ledger->withAuthState($authState)
-		);
-	}
-
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return BalanceCollection|ErrorResponse
 	 */
-	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null) {
+	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null): BalanceCollection {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/credits'),
@@ -129,23 +117,18 @@ final class CreditsResource implements CreditsResourceInterface
 			$this->authState->optionalToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var BalancePayload $result */
 		return BalanceCollection::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return RecordUsage|ErrorResponse
 	 */
-	public function recordUsage(RecordUsageRequest $request) {
+	public function recordUsage(RecordUsageRequest $request): RecordUsage {
 		/** @var RecordUsagePayload $body */
 		$body = $request->toArray();
 
@@ -160,23 +143,18 @@ final class CreditsResource implements CreditsResourceInterface
 			]
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var RecordUsageResponsePayload $result */
 		return RecordUsage::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Refund|ErrorResponse
 	 */
-	public function refund(RefundRequest $request) {
+	public function refund(RefundRequest $request): Refund {
 		/** @var RefundPayload $body */
 		$body = $request->toArray();
 
@@ -191,23 +169,51 @@ final class CreditsResource implements CreditsResourceInterface
 			]
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var RefundResponsePayload $result */
 		return Refund::from($result);
 	}
 
+	/**
+	 * @throws ApiResponseException
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
 	public function pools(): CreditsPoolsResourceInterface {
 		return $this->pools;
 	}
 
+	/**
+	 * @throws ApiResponseException
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
 	public function quotas(): CreditsQuotasResourceInterface {
 		return $this->quotas;
 	}
 
+	/**
+	 * @throws ApiResponseException
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
 	public function ledger(): CreditsLedgerResourceInterface {
 		return $this->ledger;
+	}
+
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self(
+			$this->requestExecutor,
+			$this->apiUriFactory,
+			$authState,
+			$this->pools->withAuthState($authState),
+			$this->quotas->withAuthState($authState),
+			$this->ledger->withAuthState($authState)
+		);
 	}
 }

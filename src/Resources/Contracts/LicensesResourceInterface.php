@@ -3,6 +3,10 @@
 namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
 use Generator;
+use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Requests\License\Activate;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\ImportAliases;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\RemoveAliases;
@@ -10,7 +14,6 @@ use LiquidWeb\LicensingApiClient\Requests\License\Deactivate;
 use LiquidWeb\LicensingApiClient\Requests\License\LicenseReference;
 use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Activate as ActivateResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases as ImportAliasesResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\RemoveAliases as RemoveAliasesResponse;
@@ -19,6 +22,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\Listing\Listing;
 use LiquidWeb\LicensingApiClient\Responses\License\RegenerateKey as RegenerateKeyResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\StatusChange;
 use LiquidWeb\LicensingApiClient\Responses\License\Validate;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Defines the licenses resource surface.
@@ -26,59 +30,105 @@ use LiquidWeb\LicensingApiClient\Responses\License\Validate;
 interface LicensesResourceInterface
 {
 	/**
-	 * @return Listing|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function list(ListRequest $request);
+	public function list(ListRequest $request): Listing;
 
 	/**
-	 * @return Generator<int, Listing|ErrorResponse, mixed, void>
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 *
+	 * @return Generator<int, Listing, mixed, void>
 	 */
 	public function pages(ListRequest $request): Generator;
 
 	/**
-	 * @return ActivateResponse|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function activate(Activate $request);
+	public function activate(Activate $request): ActivateResponse;
 
 	/**
-	 * @return DeactivateResponse|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function deactivate(Deactivate $request);
+	public function deactivate(Deactivate $request): DeactivateResponse;
 
 	/**
 	 * @param list<string> $productSlugs
 	 *
-	 * @return Validate|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function validate(string $key, array $productSlugs, string $domain);
+	public function validate(string $key, array $productSlugs, string $domain): Validate;
 
 	/**
-	 * @return StatusChange|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function suspend(LicenseReference $request);
+	public function suspend(LicenseReference $request): StatusChange;
 
 	/**
-	 * @return StatusChange|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function reinstate(LicenseReference $request);
+	public function reinstate(LicenseReference $request): StatusChange;
 
 	/**
-	 * @return StatusChange|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function ban(LicenseReference $request);
+	public function ban(LicenseReference $request): StatusChange;
 
 	/**
-	 * @return RegenerateKeyResponse|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function regenerateKey(RegenerateKey $request);
+	public function regenerateKey(RegenerateKey $request): RegenerateKeyResponse;
 
 	/**
-	 * @return ImportAliasesResponse|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function importAliases(ImportAliases $request);
+	public function importAliases(ImportAliases $request): ImportAliasesResponse;
 
 	/**
-	 * @return RemoveAliasesResponse|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function removeAliases(RemoveAliases $request);
+	public function removeAliases(RemoveAliases $request): RemoveAliasesResponse;
 }

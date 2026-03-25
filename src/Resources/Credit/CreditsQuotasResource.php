@@ -3,6 +3,7 @@
 namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\ApiResponseException;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -14,7 +15,6 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterf
 use LiquidWeb\LicensingApiClient\Responses\Credit\DeleteQuota;
 use LiquidWeb\LicensingApiClient\Responses\Credit\QuotaCollection;
 use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\SiteQuota;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -57,19 +57,14 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 		$this->authState       = $authState;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
-	}
-
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return QuotaCollection|ErrorResponse
 	 */
-	public function list(string $key) {
+	public function list(string $key): QuotaCollection {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/credits/quotas'),
@@ -80,23 +75,18 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var QuotaCollectionPayload $result */
 		return QuotaCollection::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return SiteQuota|ErrorResponse
 	 */
-	public function set(SetQuota $request) {
+	public function set(SetQuota $request): SiteQuota {
 		/** @var SetQuotaPayload $body */
 		$body = $request->toArray();
 
@@ -108,23 +98,18 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var SiteQuotaPayload $result */
 		return SiteQuota::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return DeleteQuota|ErrorResponse
 	 */
-	public function delete(string $key, string $domain, string $creditType) {
+	public function delete(string $key, string $domain, string $creditType): DeleteQuota {
 		$result = $this->requestExecutor->executeJson(
 			'DELETE',
 			$this->apiUriFactory->make('/credits/quotas'),
@@ -137,11 +122,11 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var DeleteQuotaPayload $result */
 		return DeleteQuota::from($result);
+	}
+
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 }

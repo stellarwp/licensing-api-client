@@ -2,12 +2,16 @@
 
 namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
+use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
 use LiquidWeb\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
 use LiquidWeb\LicensingApiClient\Responses\Credit\BalanceCollection;
 use LiquidWeb\LicensingApiClient\Responses\Credit\RecordUsage;
 use LiquidWeb\LicensingApiClient\Responses\Credit\Refund;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Defines the root credits resource surface.
@@ -15,23 +19,56 @@ use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 interface CreditsResourceInterface
 {
 	/**
-	 * @return BalanceCollection|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null);
+	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null): BalanceCollection;
 
 	/**
-	 * @return RecordUsage|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function recordUsage(RecordUsageRequest $request);
+	public function recordUsage(RecordUsageRequest $request): RecordUsage;
 
 	/**
-	 * @return Refund|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function refund(RefundRequest $request);
+	public function refund(RefundRequest $request): Refund;
 
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
 	public function pools(): CreditsPoolsResourceInterface;
 
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
 	public function quotas(): CreditsQuotasResourceInterface;
 
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
 	public function ledger(): CreditsLedgerResourceInterface;
 }

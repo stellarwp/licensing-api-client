@@ -69,16 +69,16 @@ final class BalanceEntry implements Response
 		int $aggregateOverage,
 		array $pools
 	) {
-		$this->creditType        = $creditType;
-		$this->remaining         = $remaining;
-		$this->siteQuota         = $siteQuota;
-		$this->siteUsed          = $siteUsed;
-		$this->siteRemaining     = $siteRemaining;
-		$this->aggregateTotal    = $aggregateTotal;
-		$this->aggregateUsed     = $aggregateUsed;
+		$this->creditType         = $creditType;
+		$this->remaining          = $remaining;
+		$this->siteQuota          = $siteQuota;
+		$this->siteUsed           = $siteUsed;
+		$this->siteRemaining      = $siteRemaining;
+		$this->aggregateTotal     = $aggregateTotal;
+		$this->aggregateUsed      = $aggregateUsed;
 		$this->aggregateRemaining = $aggregateRemaining;
-		$this->aggregateOverage  = $aggregateOverage;
-		$this->pools             = $pools;
+		$this->aggregateOverage   = $aggregateOverage;
+		$this->pools              = $pools;
 	}
 
 	/**

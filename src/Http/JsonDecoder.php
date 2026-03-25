@@ -11,9 +11,9 @@ use LiquidWeb\LicensingApiClient\Exceptions\DecodingException;
 final class JsonDecoder
 {
 	/**
-	 * @return array<array-key, mixed>
 	 *
 	 * @throws DecodingException
+	 * @return array<array-key, mixed>
 	 */
 	public function decode(string $json): array {
 		try {

@@ -81,8 +81,7 @@ final class Config
 		);
 	}
 
-	public function apiRootPath(): string
-	{
+	public function apiRootPath(): string {
 		return '/' . $this->apiRoot;
 	}
 }

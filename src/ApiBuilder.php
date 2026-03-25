@@ -6,6 +6,7 @@ use LiquidWeb\LicensingApiClient\Http\ApiVersion;
 use LiquidWeb\LicensingApiClient\Http\AuthContext;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
+use LiquidWeb\LicensingApiClient\Http\Factories\ResponseExceptionFactory;
 use LiquidWeb\LicensingApiClient\Http\JsonDecoder;
 use LiquidWeb\LicensingApiClient\Http\RequestBuilder;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
@@ -53,7 +54,7 @@ final class ApiBuilder
 		$requestExecutor = $this->buildRequestExecutor();
 		$creditsPools    = new CreditsPoolsResource($requestExecutor, $apiUriFactory, $authState);
 		$creditsQuotas   = new CreditsQuotasResource($requestExecutor, $apiUriFactory, $authState);
-		$creditsLedger        = new CreditsLedgerResource(
+		$creditsLedger   = new CreditsLedgerResource(
 			$requestExecutor,
 			$apiUriFactory,
 			$authState
@@ -63,19 +64,29 @@ final class ApiBuilder
 			$authState,
 			new LicensesResource($requestExecutor, $apiUriFactory, $authState),
 			new ProductsResource($requestExecutor, $apiUriFactory, $authState),
-			new CreditsResource($requestExecutor, $apiUriFactory, $authState, $creditsPools, $creditsQuotas, $creditsLedger),
+			new CreditsResource(
+				$requestExecutor,
+				$apiUriFactory,
+				$authState,
+				$creditsPools,
+				$creditsQuotas,
+				$creditsLedger
+			),
 			new EntitlementsResource($requestExecutor, $apiUriFactory, $authState)
 		);
 	}
 
 	private function buildRequestExecutor(): RequestExecutor {
+		$jsonDecoder = new JsonDecoder();
+
 		return new RequestExecutor(
 			$this->httpClient,
 			new RequestBuilder(
 				$this->requestFactory,
 				$this->streamFactory
 			),
-			new JsonDecoder()
+			$jsonDecoder,
+			new ResponseExceptionFactory($jsonDecoder)
 		);
 	}
 }

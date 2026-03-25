@@ -2,8 +2,12 @@
 
 namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Responses\Product\Catalog;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Defines the products resource surface.
@@ -11,7 +15,11 @@ use LiquidWeb\LicensingApiClient\Responses\Product\Catalog;
 interface ProductsResourceInterface
 {
 	/**
-	 * @return Catalog|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function catalog(string $key, ?string $domain = null);
+	public function catalog(string $key, ?string $domain = null): Catalog;
 }

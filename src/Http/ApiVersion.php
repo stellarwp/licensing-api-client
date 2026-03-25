@@ -17,8 +17,7 @@ final class ApiVersion implements Stringable
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(string $version)
-	{
+	public function __construct(string $version) {
 		$version = trim($version, '/');
 
 		if ($version === '') {
@@ -28,18 +27,15 @@ final class ApiVersion implements Stringable
 		$this->version = $version;
 	}
 
-	public static function default(): self
-	{
+	public static function default(): self {
 		return new self(self::V1);
 	}
 
-	public function get(): string
-	{
+	public function get(): string {
 		return $this->version;
 	}
 
-	public function __toString(): string
-	{
+	public function __toString(): string {
 		return $this->version;
 	}
 }

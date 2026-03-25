@@ -3,6 +3,7 @@
 namespace LiquidWeb\LicensingApiClient\Resources\Credit;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\ApiResponseException;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -16,7 +17,6 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterfa
 use LiquidWeb\LicensingApiClient\Responses\Credit\DeletePool;
 use LiquidWeb\LicensingApiClient\Responses\Credit\PoolCollection;
 use LiquidWeb\LicensingApiClient\Responses\Credit\ValueObjects\CreditPool;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use Psr\Http\Client\ClientExceptionInterface;
 
 /**
@@ -65,19 +65,14 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 		$this->authState       = $authState;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
-	}
-
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return PoolCollection|ErrorResponse
 	 */
-	public function list(string $key, bool $active = false) {
+	public function list(string $key, bool $active = false): PoolCollection {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/credits/pools'),
@@ -89,23 +84,18 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var PoolCollectionPayload $result */
 		return PoolCollection::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return CreditPool|ErrorResponse
 	 */
-	public function create(CreatePool $request) {
+	public function create(CreatePool $request): CreditPool {
 		/** @var CreatePoolPayload $body */
 		$body = $request->toArray();
 
@@ -117,23 +107,18 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var PoolPayload $result */
 		return CreditPool::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return CreditPool|ErrorResponse
 	 */
-	public function update(UpdatePool $request) {
+	public function update(UpdatePool $request): CreditPool {
 		/** @var UpdatePoolPayload $body */
 		$body = $request->toArray();
 
@@ -145,23 +130,18 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var PoolPayload $result */
 		return CreditPool::from($result);
 	}
 
 	/**
+	 * @throws ApiResponseException
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return DeletePool|ErrorResponse
 	 */
-	public function delete(DeletePoolRequest $request) {
+	public function delete(DeletePoolRequest $request): DeletePool {
 		/** @var DeletePoolPayload $body */
 		$body = $request->toArray();
 
@@ -173,11 +153,11 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->authState->requiredToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var DeletePoolResponsePayload $result */
 		return DeletePool::from($result);
+	}
+
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 }

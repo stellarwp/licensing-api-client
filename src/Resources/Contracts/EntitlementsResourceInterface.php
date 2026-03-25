@@ -2,13 +2,17 @@
 
 namespace LiquidWeb\LicensingApiClient\Resources\Contracts;
 
+use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
+use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Requests\Entitlement\Upsert;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Cancel;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Delete;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Suspend;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Unsuspend;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
+use Psr\Http\Client\ClientExceptionInterface;
 
 /**
  * Defines the entitlements resource surface.
@@ -16,27 +20,47 @@ use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 interface EntitlementsResourceInterface
 {
 	/**
-	 * @return UpsertResponse|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function upsert(Upsert $request);
+	public function upsert(Upsert $request): UpsertResponse;
 
 	/**
-	 * @return Suspend|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function suspend(string $key, string $productSlug, string $tier);
+	public function suspend(string $key, string $productSlug, string $tier): Suspend;
 
 	/**
-	 * @return Unsuspend|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function unsuspend(string $key, string $productSlug, string $tier);
+	public function unsuspend(string $key, string $productSlug, string $tier): Unsuspend;
 
 	/**
-	 * @return Cancel|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function cancel(string $key, string $productSlug, string $tier, ?string $reason = null);
+	public function cancel(string $key, string $productSlug, string $tier, ?string $reason = null): Cancel;
 
 	/**
-	 * @return Delete|ErrorResponse
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
 	 */
-	public function delete(string $key, string $productSlug, string $tier);
+	public function delete(string $key, string $productSlug, string $tier): Delete;
 }

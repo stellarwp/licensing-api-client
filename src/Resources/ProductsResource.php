@@ -3,6 +3,7 @@
 namespace LiquidWeb\LicensingApiClient\Resources;
 
 use JsonException;
+use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
@@ -10,7 +11,6 @@ use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
-use LiquidWeb\LicensingApiClient\Responses\ErrorResponse;
 use LiquidWeb\LicensingApiClient\Responses\Product\Catalog;
 use Psr\Http\Client\ClientExceptionInterface;
 
@@ -56,19 +56,14 @@ final class ProductsResource implements ProductsResourceInterface
 		$this->authState       = $authState;
 	}
 
-	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
-	}
-
 	/**
+	 * @throws ApiErrorExceptionInterface
 	 * @throws MissingAuthenticationException
 	 * @throws UnexpectedResponseException
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
-	 *
-	 * @return Catalog|ErrorResponse
 	 */
-	public function catalog(string $key, ?string $domain = null) {
+	public function catalog(string $key, ?string $domain = null): Catalog {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/products'),
@@ -80,11 +75,11 @@ final class ProductsResource implements ProductsResourceInterface
 			$this->authState->optionalToken()
 		);
 
-		if ($result instanceof ErrorResponse) {
-			return $result;
-		}
-
 		/** @var CatalogPayload $result */
 		return Catalog::from($result);
+	}
+
+	protected function rebindWithAuthState(AuthState $authState): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
 	}
 }
