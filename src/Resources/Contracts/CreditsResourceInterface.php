@@ -25,7 +25,7 @@ interface CreditsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null): BalanceCollection;
+	public function balance(string $licenseKey, string $domain, ?string $creditType = null, ?string $sort = null): BalanceCollection;
 
 	/**
 	 * @throws ApiErrorExceptionInterface

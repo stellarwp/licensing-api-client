@@ -13,7 +13,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
  * @implements Response<array{
  *     status: string,
  *     is_valid: bool,
- *     license: array{key: string, status: string}|null,
+ *     license: array{license_key: string, status: string}|null,
  *     entitlement: array{
  *         product_slug: string,
  *         tier: string,
@@ -58,7 +58,7 @@ final class Activate implements Response
 	 * @param array{
 	 *     status: string,
 	 *     is_valid: bool,
-	 *     license: array{key: string, status: string}|null,
+	 *     license: array{license_key: string, status: string}|null,
 	 *     entitlement: array{
 	 *         product_slug: string,
 	 *         tier: string,

@@ -24,7 +24,7 @@ interface CreditsQuotasResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function list(string $key): QuotaCollection;
+	public function list(string $licenseKey): QuotaCollection;
 
 	/**
 	 * @throws ApiErrorExceptionInterface
@@ -42,5 +42,5 @@ interface CreditsQuotasResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function delete(string $key, string $domain, string $creditType): DeleteQuota;
+	public function delete(string $licenseKey, string $domain, string $creditType): DeleteQuota;
 }

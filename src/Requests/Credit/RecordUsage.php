@@ -6,7 +6,7 @@ namespace LiquidWeb\LicensingApiClient\Requests\Credit;
  * Represents a credit usage write request payload.
  *
  * @phpstan-type RecordUsagePayload array{
- *     key: string,
+ *     license_key: string,
  *     domain: string,
  *     product_slug: string,
  *     credit_type: string,
@@ -20,7 +20,7 @@ final class RecordUsage
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Site domain consuming the credits.
@@ -58,14 +58,14 @@ final class RecordUsage
 	public string $idempotencyKey;
 
 	public function __construct(
-		string $key,
+		string $licenseKey,
 		string $domain,
 		string $productSlug,
 		string $creditType,
 		int $creditsUsed,
 		string $idempotencyKey
 	) {
-		$this->key            = $key;
+		$this->licenseKey     = $licenseKey;
 		$this->domain         = $domain;
 		$this->productSlug    = $productSlug;
 		$this->creditType     = $creditType;
@@ -78,7 +78,7 @@ final class RecordUsage
 	 */
 	public function toArray(): array {
 		return [
-			'key'          => $this->key,
+			'license_key'  => $this->licenseKey,
 			'domain'       => $this->domain,
 			'product_slug' => $this->productSlug,
 			'credit_type'  => $this->creditType,

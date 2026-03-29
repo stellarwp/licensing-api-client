@@ -76,7 +76,7 @@ interface LicensesResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function validate(string $key, array $productSlugs, string $domain): Validate;
+	public function validate(string $licenseKey, array $productSlugs, string $domain): Validate;
 
 	/**
 	 * @throws ApiErrorExceptionInterface

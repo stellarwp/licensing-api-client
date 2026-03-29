@@ -64,12 +64,12 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function list(string $key): QuotaCollection {
+	public function list(string $licenseKey): QuotaCollection {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/credits/quotas'),
 			[
-				'key' => $key,
+				'license_key' => $licenseKey,
 			],
 			null,
 			$this->authState->requiredToken()
@@ -109,13 +109,13 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function delete(string $key, string $domain, string $creditType): DeleteQuota {
+	public function delete(string $licenseKey, string $domain, string $creditType): DeleteQuota {
 		$result = $this->requestExecutor->executeJson(
 			'DELETE',
 			$this->apiUriFactory->make('/credits/quotas'),
 			[],
 			[
-				'key'         => $key,
+				'license_key' => $licenseKey,
 				'domain'      => $domain,
 				'credit_type' => $creditType,
 			],

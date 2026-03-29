@@ -21,5 +21,5 @@ interface ProductsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function catalog(string $key, ?string $domain = null): Catalog;
+	public function catalog(string $licenseKey, ?string $domain = null): Catalog;
 }

@@ -5,10 +5,10 @@ namespace LiquidWeb\LicensingApiClient\Requests\License;
 use InvalidArgumentException;
 
 /**
- * Represents a license reference identified by key or identity ID.
+ * Represents a license reference identified by license key or identity ID.
  *
  * @phpstan-type LicenseReferencePayload array{
- *     key?: string,
+ *     license_key?: string,
  *     identity_id?: string
  * }
  */
@@ -19,7 +19,7 @@ final class LicenseReference
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public ?string $key;
+	public ?string $licenseKey;
 
 	/**
 	 * Customer identity identifier.
@@ -31,12 +31,12 @@ final class LicenseReference
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(?string $key = null, ?string $identityId = null) {
-		if ($key === null && $identityId === null) {
-			throw new InvalidArgumentException('Either key or identityId is required.');
+	public function __construct(?string $licenseKey = null, ?string $identityId = null) {
+		if ($licenseKey === null && $identityId === null) {
+			throw new InvalidArgumentException('Either licenseKey or identityId is required.');
 		}
 
-		$this->key        = $key;
+		$this->licenseKey = $licenseKey;
 		$this->identityId = $identityId;
 	}
 
@@ -45,7 +45,7 @@ final class LicenseReference
 	 */
 	public function toArray(): array {
 		return array_filter([
-			'key'         => $this->key,
+			'license_key' => $this->licenseKey,
 			'identity_id' => $this->identityId,
 		], static fn ($value): bool => $value !== null);
 	}

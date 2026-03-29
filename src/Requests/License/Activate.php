@@ -6,7 +6,7 @@ namespace LiquidWeb\LicensingApiClient\Requests\License;
  * Represents a license activation request payload.
  *
  * @phpstan-type ActivatePayload array{
- *     key: string,
+ *     license_key: string,
  *     product_slug: string,
  *     tier: string,
  *     domain: string
@@ -19,7 +19,7 @@ final class Activate
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Product identifier to activate.
@@ -42,8 +42,8 @@ final class Activate
 	 */
 	public string $domain;
 
-	public function __construct(string $key, string $productSlug, string $tier, string $domain) {
-		$this->key         = $key;
+	public function __construct(string $licenseKey, string $productSlug, string $tier, string $domain) {
+		$this->licenseKey  = $licenseKey;
 		$this->productSlug = $productSlug;
 		$this->tier        = $tier;
 		$this->domain      = $domain;
@@ -54,7 +54,7 @@ final class Activate
 	 */
 	public function toArray(): array {
 		return [
-			'key'          => $this->key,
+			'license_key'  => $this->licenseKey,
 			'product_slug' => $this->productSlug,
 			'tier'         => $this->tier,
 			'domain'       => $this->domain,

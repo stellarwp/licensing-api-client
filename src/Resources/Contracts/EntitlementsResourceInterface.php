@@ -35,7 +35,7 @@ interface EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function suspend(string $key, string $productSlug, string $tier): Suspend;
+	public function suspend(string $licenseKey, string $productSlug, string $tier): Suspend;
 
 	/**
 	 * @throws ApiErrorExceptionInterface
@@ -44,7 +44,7 @@ interface EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function unsuspend(string $key, string $productSlug, string $tier): Unsuspend;
+	public function unsuspend(string $licenseKey, string $productSlug, string $tier): Unsuspend;
 
 	/**
 	 * @throws ApiErrorExceptionInterface
@@ -53,7 +53,7 @@ interface EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function cancel(string $key, string $productSlug, string $tier, ?string $reason = null): Cancel;
+	public function cancel(string $licenseKey, string $productSlug, string $tier, ?string $reason = null): Cancel;
 
 	/**
 	 * @throws ApiErrorExceptionInterface
@@ -62,5 +62,5 @@ interface EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function delete(string $key, string $productSlug, string $tier): Delete;
+	public function delete(string $licenseKey, string $productSlug, string $tier): Delete;
 }

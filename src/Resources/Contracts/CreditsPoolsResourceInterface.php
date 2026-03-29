@@ -26,7 +26,7 @@ interface CreditsPoolsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function list(string $key, bool $active = false): PoolCollection;
+	public function list(string $licenseKey, bool $active = false): PoolCollection;
 
 	/**
 	 * @throws ApiErrorExceptionInterface

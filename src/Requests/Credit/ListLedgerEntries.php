@@ -9,7 +9,7 @@ use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
  * Represents a credits ledger query request.
  *
  * @phpstan-type ListLedgerEntriesQuery array{
- *     key: string,
+ *     license_key: string,
  *     domain?: string,
  *     credit_type?: string,
  *     pool_id?: int,
@@ -30,7 +30,7 @@ final class ListLedgerEntries
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Restrict results to a specific site domain.
@@ -97,7 +97,7 @@ final class ListLedgerEntries
 	public ?int $endingBefore;
 
 	public function __construct(
-		string $key,
+		string $licenseKey,
 		?string $domain = null,
 		?string $creditType = null,
 		?int $poolId = null,
@@ -108,7 +108,7 @@ final class ListLedgerEntries
 		?int $startingAfter = null,
 		?int $endingBefore = null
 	) {
-		$this->key           = $key;
+		$this->licenseKey    = $licenseKey;
 		$this->domain        = $domain;
 		$this->creditType    = $creditType;
 		$this->poolId        = $poolId;
@@ -125,7 +125,7 @@ final class ListLedgerEntries
 	 */
 	public function toQuery(): array {
 		return array_filter([
-			'key'            => $this->key,
+			'license_key'    => $this->licenseKey,
 			'domain'         => $this->domain,
 			'credit_type'    => $this->creditType,
 			'pool_id'        => $this->poolId,

@@ -10,7 +10,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\ProductValidatio
  * Represents the batch license validation response payload.
  *
  * @implements Response<array{
- *     license: array{key: string, status: string}|null,
+ *     license: array{license_key: string, status: string}|null,
  *     domain: string,
  *     is_production: bool,
  *     products: list<array{
@@ -68,7 +68,7 @@ final class Validate implements Response
 
 	/**
 	 * @param array{
-	 *     license: array{key: string, status: string}|null,
+	 *     license: array{license_key: string, status: string}|null,
 	 *     domain: string,
 	 *     is_production: bool,
 	 *     products: list<array{

@@ -72,13 +72,13 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function list(string $key, bool $active = false): PoolCollection {
+	public function list(string $licenseKey, bool $active = false): PoolCollection {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/credits/pools'),
 			[
-				'key'    => $key,
-				'active' => $active,
+				'license_key' => $licenseKey,
+				'active'      => $active,
 			],
 			null,
 			$this->authState->requiredToken()

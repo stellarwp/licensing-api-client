@@ -6,7 +6,7 @@ namespace LiquidWeb\LicensingApiClient\Requests\License;
  * Represents a license deactivation request payload.
  *
  * @phpstan-type DeactivatePayload array{
- *     key: string,
+ *     license_key: string,
  *     product_slug: string,
  *     domain: string
  * }
@@ -18,7 +18,7 @@ final class Deactivate
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Product identifier to deactivate.
@@ -34,8 +34,8 @@ final class Deactivate
 	 */
 	public string $domain;
 
-	public function __construct(string $key, string $productSlug, string $domain) {
-		$this->key         = $key;
+	public function __construct(string $licenseKey, string $productSlug, string $domain) {
+		$this->licenseKey  = $licenseKey;
 		$this->productSlug = $productSlug;
 		$this->domain      = $domain;
 	}
@@ -45,7 +45,7 @@ final class Deactivate
 	 */
 	public function toArray(): array {
 		return [
-			'key'          => $this->key,
+			'license_key'  => $this->licenseKey,
 			'product_slug' => $this->productSlug,
 			'domain'       => $this->domain,
 		];

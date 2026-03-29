@@ -6,7 +6,7 @@ namespace LiquidWeb\LicensingApiClient\Requests\Credit;
  * Represents a credit refund write request payload.
  *
  * @phpstan-type RefundPayload array{
- *     key: string,
+ *     license_key: string,
  *     domain: string,
  *     product_slug: string,
  *     credit_type: string,
@@ -21,7 +21,7 @@ final class Refund
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Site domain receiving the refund.
@@ -66,7 +66,7 @@ final class Refund
 	public string $idempotencyKey;
 
 	public function __construct(
-		string $key,
+		string $licenseKey,
 		string $domain,
 		string $productSlug,
 		string $creditType,
@@ -74,7 +74,7 @@ final class Refund
 		int $creditsRefunded,
 		string $idempotencyKey
 	) {
-		$this->key             = $key;
+		$this->licenseKey      = $licenseKey;
 		$this->domain          = $domain;
 		$this->productSlug     = $productSlug;
 		$this->creditType      = $creditType;
@@ -88,7 +88,7 @@ final class Refund
 	 */
 	public function toArray(): array {
 		return [
-			'key'              => $this->key,
+			'license_key'      => $this->licenseKey,
 			'domain'           => $this->domain,
 			'product_slug'     => $this->productSlug,
 			'credit_type'      => $this->creditType,

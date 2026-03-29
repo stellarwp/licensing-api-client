@@ -103,12 +103,12 @@ final class CreditsResource implements CreditsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function balance(string $key, string $domain, ?string $creditType = null, ?string $sort = null): BalanceCollection {
+	public function balance(string $licenseKey, string $domain, ?string $creditType = null, ?string $sort = null): BalanceCollection {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/credits'),
 			array_filter([
-				'key'         => $key,
+				'license_key' => $licenseKey,
 				'domain'      => $domain,
 				'credit_type' => $creditType,
 				'sort'        => $sort,

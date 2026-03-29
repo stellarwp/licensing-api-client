@@ -9,7 +9,7 @@ use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
  * Represents a credit pool delete request payload.
  *
  * @phpstan-type DeletePoolPayload array{
- *     key: string,
+ *     license_key: string,
  *     pool_id: int,
  *     expires_at?: string
  * }
@@ -23,7 +23,7 @@ final class DeletePool
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Credit pool identifier to delete.
@@ -39,10 +39,10 @@ final class DeletePool
 	 */
 	public ?DateTimeImmutable $expiresAt;
 
-	public function __construct(string $key, int $poolId, ?DateTimeImmutable $expiresAt = null) {
-		$this->key       = $key;
-		$this->poolId    = $poolId;
-		$this->expiresAt = $expiresAt;
+	public function __construct(string $licenseKey, int $poolId, ?DateTimeImmutable $expiresAt = null) {
+		$this->licenseKey = $licenseKey;
+		$this->poolId     = $poolId;
+		$this->expiresAt  = $expiresAt;
 	}
 
 	/**
@@ -50,9 +50,9 @@ final class DeletePool
 	 */
 	public function toArray(): array {
 		return array_filter([
-			'key'        => $this->key,
-			'pool_id'    => $this->poolId,
-			'expires_at' => $this->expiresAt ? $this->formatDateTime($this->expiresAt) : null,
+			'license_key' => $this->licenseKey,
+			'pool_id'     => $this->poolId,
+			'expires_at'  => $this->expiresAt ? $this->formatDateTime($this->expiresAt) : null,
 		], static fn ($value): bool => $value !== null);
 	}
 }

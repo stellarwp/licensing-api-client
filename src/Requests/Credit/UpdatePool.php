@@ -9,7 +9,7 @@ use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
  * Represents a credit pool update request payload.
  *
  * @phpstan-type UpdatePoolPayload array{
- *     key: string,
+ *     license_key: string,
  *     pool_id: int,
  *     credits_total?: int,
  *     overage_limit?: int,
@@ -27,7 +27,7 @@ final class UpdatePool
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Credit pool identifier to update.
@@ -77,7 +77,7 @@ final class UpdatePool
 	 * @param array<string, mixed>|null $metadata
 	 */
 	public function __construct(
-		string $key,
+		string $licenseKey,
 		int $poolId,
 		?int $creditsTotal = null,
 		?int $overageLimit = null,
@@ -85,7 +85,7 @@ final class UpdatePool
 		?DateTimeImmutable $expiresAt = null,
 		?array $metadata = null
 	) {
-		$this->key          = $key;
+		$this->licenseKey   = $licenseKey;
 		$this->poolId       = $poolId;
 		$this->creditsTotal = $creditsTotal;
 		$this->overageLimit = $overageLimit;
@@ -99,7 +99,7 @@ final class UpdatePool
 	 */
 	public function toArray(): array {
 		return array_filter([
-			'key'           => $this->key,
+			'license_key'   => $this->licenseKey,
 			'pool_id'       => $this->poolId,
 			'credits_total' => $this->creditsTotal,
 			'overage_limit' => $this->overageLimit,

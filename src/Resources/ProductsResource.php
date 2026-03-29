@@ -63,13 +63,13 @@ final class ProductsResource implements ProductsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function catalog(string $key, ?string $domain = null): Catalog {
+	public function catalog(string $licenseKey, ?string $domain = null): Catalog {
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/products'),
 			array_filter([
-				'key'    => $key,
-				'domain' => $domain,
+				'license_key' => $licenseKey,
+				'domain'      => $domain,
 			], static fn($value): bool => $value !== null),
 			null,
 			$this->authState->optionalToken()

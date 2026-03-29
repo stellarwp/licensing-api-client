@@ -16,7 +16,7 @@ use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
  * `firstPeriodStart` is normalized to the API's canonical UTC datetime format.
  *
  * @phpstan-type SetQuotaPayload array{
- *     key: string,
+ *     license_key: string,
  *     domain: string,
  *     credit_type: string,
  *     quota?: int,
@@ -34,7 +34,7 @@ final class SetQuota
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Site domain the quota applies to.
@@ -88,7 +88,7 @@ final class SetQuota
 	 * @param array<string, mixed>|null $metadata
 	 */
 	public function __construct(
-		string $key,
+		string $licenseKey,
 		string $domain,
 		string $creditType,
 		?int $quota = null,
@@ -96,7 +96,7 @@ final class SetQuota
 		?DateTimeImmutable $firstPeriodStart = null,
 		?array $metadata = null
 	) {
-		$this->key              = $key;
+		$this->licenseKey       = $licenseKey;
 		$this->domain           = $domain;
 		$this->creditType       = $creditType;
 		$this->quota            = $quota;
@@ -110,7 +110,7 @@ final class SetQuota
 	 */
 	public function toArray(): array {
 		return array_filter([
-			'key'                => $this->key,
+			'license_key'        => $this->licenseKey,
 			'domain'             => $this->domain,
 			'credit_type'        => $this->creditType,
 			'quota'              => $this->quota,

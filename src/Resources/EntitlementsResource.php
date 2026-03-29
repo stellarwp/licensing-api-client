@@ -91,13 +91,13 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function suspend(string $key, string $productSlug, string $tier): Suspend {
+	public function suspend(string $licenseKey, string $productSlug, string $tier): Suspend {
 		$result = $this->requestExecutor->executeJson(
 			'POST',
 			$this->apiUriFactory->make('/entitlements/suspend'),
 			[],
 			[
-				'key'          => $key,
+				'license_key'  => $licenseKey,
 				'product_slug' => $productSlug,
 				'tier'         => $tier,
 			],
@@ -115,13 +115,13 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function unsuspend(string $key, string $productSlug, string $tier): Unsuspend {
+	public function unsuspend(string $licenseKey, string $productSlug, string $tier): Unsuspend {
 		$result = $this->requestExecutor->executeJson(
 			'POST',
 			$this->apiUriFactory->make('/entitlements/unsuspend'),
 			[],
 			[
-				'key'          => $key,
+				'license_key'  => $licenseKey,
 				'product_slug' => $productSlug,
 				'tier'         => $tier,
 			],
@@ -139,9 +139,9 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function cancel(string $key, string $productSlug, string $tier, ?string $reason = null): Cancel {
+	public function cancel(string $licenseKey, string $productSlug, string $tier, ?string $reason = null): Cancel {
 		$body = array_filter([
-			'key'          => $key,
+			'license_key'  => $licenseKey,
 			'product_slug' => $productSlug,
 			'tier'         => $tier,
 			'reason'       => $reason,
@@ -166,13 +166,13 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 	 * @throws ClientExceptionInterface
 	 * @throws JsonException
 	 */
-	public function delete(string $key, string $productSlug, string $tier): Delete {
+	public function delete(string $licenseKey, string $productSlug, string $tier): Delete {
 		$result = $this->requestExecutor->executeJson(
 			'DELETE',
 			$this->apiUriFactory->make('/entitlements'),
 			[],
 			[
-				'key'          => $key,
+				'license_key'  => $licenseKey,
 				'product_slug' => $productSlug,
 				'tier'         => $tier,
 			],

@@ -9,7 +9,7 @@ use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
  * Represents a credit pool creation request payload.
  *
  * @phpstan-type CreatePoolPayload array{
- *     key: string,
+ *     license_key: string,
  *     credit_type: string,
  *     credits_total: int,
  *     period: string,
@@ -29,7 +29,7 @@ final class CreatePool
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public string $key;
+	public string $licenseKey;
 
 	/**
 	 * Credit type tracked by this pool.
@@ -93,7 +93,7 @@ final class CreatePool
 	 * @param array<string, mixed>|null $metadata
 	 */
 	public function __construct(
-		string $key,
+		string $licenseKey,
 		string $creditType,
 		int $creditsTotal,
 		string $period,
@@ -103,7 +103,7 @@ final class CreatePool
 		?DateTimeImmutable $expiresAt = null,
 		?array $metadata = null
 	) {
-		$this->key              = $key;
+		$this->licenseKey       = $licenseKey;
 		$this->creditType       = $creditType;
 		$this->creditsTotal     = $creditsTotal;
 		$this->period           = $period;
@@ -119,7 +119,7 @@ final class CreatePool
 	 */
 	public function toArray(): array {
 		return array_filter([
-			'key'                => $this->key,
+			'license_key'        => $this->licenseKey,
 			'credit_type'        => $this->creditType,
 			'credits_total'      => $this->creditsTotal,
 			'period'             => $this->period,

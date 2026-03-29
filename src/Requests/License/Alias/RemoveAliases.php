@@ -8,7 +8,7 @@ use InvalidArgumentException;
  * Represents an alias removal request payload.
  *
  * @phpstan-type RemoveAliasesPayload array{
- *     key?: string,
+ *     license_key?: string,
  *     identity_id?: string,
  *     alias_key?: string
  * }
@@ -20,7 +20,7 @@ final class RemoveAliases
 	 *
 	 * @example LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N
 	 */
-	public ?string $key;
+	public ?string $licenseKey;
 
 	/**
 	 * Customer identity identifier.
@@ -39,12 +39,12 @@ final class RemoveAliases
 	/**
 	 * @throws InvalidArgumentException
 	 */
-	public function __construct(?string $key = null, ?string $identityId = null, ?string $aliasKey = null) {
-		if ($key === null && $identityId === null) {
-			throw new InvalidArgumentException('Either key or identityId is required.');
+	public function __construct(?string $licenseKey = null, ?string $identityId = null, ?string $aliasKey = null) {
+		if ($licenseKey === null && $identityId === null) {
+			throw new InvalidArgumentException('Either licenseKey or identityId is required.');
 		}
 
-		$this->key        = $key;
+		$this->licenseKey = $licenseKey;
 		$this->identityId = $identityId;
 		$this->aliasKey   = $aliasKey;
 	}
@@ -54,7 +54,7 @@ final class RemoveAliases
 	 */
 	public function toArray(): array {
 		return array_filter([
-			'key'         => $this->key,
+			'license_key' => $this->licenseKey,
 			'identity_id' => $this->identityId,
 			'alias_key'   => $this->aliasKey,
 		], static fn ($value): bool => $value !== null);
