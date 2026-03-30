@@ -3,12 +3,11 @@
 namespace LiquidWeb\LicensingApiClient\Http;
 
 use InvalidArgumentException;
-use Stringable;
 
 /**
  * Represents an API version segment used when building endpoint URLs.
  */
-final class ApiVersion implements Stringable
+final class ApiVersion
 {
 	public const V1 = 'v1';
 
