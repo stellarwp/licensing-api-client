@@ -11,7 +11,9 @@ use Psr\Http\Message\StreamFactoryInterface;
 /**
  * Builds PSR-7 requests from SDK configuration and endpoint input.
  *
- * @phpstan-type QueryValue string|int|float|bool|null
+ * @phpstan-type QueryScalar string|int|float|bool|null
+ * @phpstan-type QueryList list<QueryScalar>
+ * @phpstan-type QueryValue QueryScalar|QueryList
  * @phpstan-type HeaderValue string|int|float|bool
  * @phpstan-type JsonScalar string|int|float|bool|null
  * @phpstan-type JsonCollection array<array-key, JsonScalar|array<array-key, JsonScalar|array<array-key, JsonScalar|null>|null>|null>
@@ -88,12 +90,41 @@ final class RequestBuilder
 	private function buildUri(ApiUri $uri, array $query): string {
 		$uri = $uri->get();
 
-		$queryString = http_build_query(array_filter($query, static fn ($value): bool => $value !== null));
+		$queryString = $this->buildQueryString($query);
 
 		if ($queryString === '') {
 			return $uri;
 		}
 
 		return $uri . (strpos($uri, '?') === false ? '?' : '&') . $queryString;
+	}
+
+	/**
+	 * @param array<string, QueryValue> $query
+	 */
+	private function buildQueryString(array $query): string {
+		$pairs = [];
+
+		foreach ($query as $key => $value) {
+			if (is_array($value)) {
+				foreach ($value as $item) {
+					if ($item === null) {
+						continue;
+					}
+
+					$pairs[] = rawurlencode($key . '[]') . '=' . rawurlencode((string) $item);
+				}
+
+				continue;
+			}
+
+			if ($value === null) {
+				continue;
+			}
+
+			$pairs[] = rawurlencode($key) . '=' . rawurlencode((string) $value);
+		}
+
+		return implode('&', $pairs);
 	}
 }

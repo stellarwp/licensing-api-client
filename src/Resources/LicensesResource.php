@@ -255,14 +255,14 @@ final class LicensesResource implements LicensesResourceInterface
 		$token = $this->authState->optionalToken();
 
 		$result = $this->requestExecutor->executeJson(
-			'POST',
+			'GET',
 			$this->apiUriFactory->make('/licenses/validate'),
-			[],
 			[
 				'license_key'   => $licenseKey,
 				'product_slugs' => $productSlugs,
 				'domain'        => $domain,
 			],
+			null,
 			$token
 		);
 
