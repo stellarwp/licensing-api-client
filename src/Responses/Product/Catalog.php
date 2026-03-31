@@ -3,7 +3,6 @@
 namespace LiquidWeb\LicensingApiClient\Responses\Product;
 
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
-use LiquidWeb\LicensingApiClient\Responses\Product\ValueObjects\CatalogEntry;
 
 /**
  * Represents the product catalog response payload.
@@ -29,15 +28,11 @@ use LiquidWeb\LicensingApiClient\Responses\Product\ValueObjects\CatalogEntry;
  */
 final class Catalog implements Response
 {
-	/**
-	 * @var CatalogEntry[]
-	 */
-	public array $products;
+	public CatalogProductCollection $products;
 
 	/**
-	 * @param CatalogEntry[] $products
 	 */
-	private function __construct(array $products) {
+	private function __construct(CatalogProductCollection $products) {
 		$this->products = $products;
 	}
 
@@ -62,20 +57,12 @@ final class Catalog implements Response
 	 * } $attributes
 	 */
 	public static function from(array $attributes): self {
-		$products = array_map(
-			static fn (array $entry): CatalogEntry => CatalogEntry::from($entry),
-			$attributes['products']
-		);
-
-		return new self($products);
+		return new self(CatalogProductCollection::from($attributes['products']));
 	}
 
 	public function toArray(): array {
 		return [
-			'products' => array_map(
-				static fn (CatalogEntry $entry): array => $entry->toArray(),
-				$this->products
-			),
+			'products' => $this->products->toArray(),
 		];
 	}
 }

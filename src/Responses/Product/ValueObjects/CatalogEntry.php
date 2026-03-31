@@ -122,4 +122,31 @@ final class CatalogEntry implements Response
 			'is_valid'          => $this->isValid,
 		], static fn ($value): bool => $value !== null));
 	}
+
+	public function isActive(): bool {
+		return $this->status === 'active';
+	}
+
+	/**
+	 * Determine whether this catalog entry was evaluated against a specific site domain.
+	 */
+	public function hasCurrentSiteValidation(): bool {
+		return $this->validationStatus !== null;
+	}
+
+	public function isValidForCurrentSite(): bool {
+		return $this->hasCurrentSiteValidation()
+			&& $this->isValid       === true
+			&& $this->activatedHere === true;
+	}
+
+	public function hasCapability(string $capability): bool {
+		return $this->capabilities->has($capability);
+	}
+
+	public function isCapabilityValid(string $capability): bool {
+		return $this->isActive()
+			&& $this->isValidForCurrentSite()
+			&& $this->hasCapability($capability);
+	}
 }

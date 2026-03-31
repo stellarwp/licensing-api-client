@@ -124,4 +124,14 @@ final class ProductValidation implements Response
 			),
 		];
 	}
+
+	public function hasCapability(string $capability): bool {
+		return $this->entitlement !== null
+			&& $this->entitlement->capabilities->has($capability);
+	}
+
+	public function isCapabilityValid(string $capability): bool {
+		return $this->isValid
+			&& $this->hasCapability($capability);
+	}
 }

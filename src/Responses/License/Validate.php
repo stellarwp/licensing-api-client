@@ -4,7 +4,6 @@ namespace LiquidWeb\LicensingApiClient\Responses\License;
 
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
-use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\ProductValidation;
 
 /**
  * Represents the batch license validation response payload.
@@ -48,17 +47,15 @@ final class Validate implements Response
 
 	public bool $isProduction;
 
-	/** @var list<ProductValidation> */
-	public array $products;
+	public ValidatedProductCollection $products;
 
 	/**
-	 * @param list<ProductValidation> $products
 	 */
 	private function __construct(
 		?LicenseSummary $license,
 		string $domain,
 		bool $isProduction,
-		array $products = []
+		ValidatedProductCollection $products
 	) {
 		$this->license      = $license;
 		$this->domain       = $domain;
@@ -99,17 +96,13 @@ final class Validate implements Response
 	 * } $attributes
 	 */
 	public static function from(array $attributes): self {
-		$license  = $attributes['license'] ?? null;
-		$products = array_map(
-			static fn(array $product): ProductValidation => ProductValidation::from($product),
-			$attributes['products']
-		);
+		$license = $attributes['license'] ?? null;
 
 		return new self(
 			$license ? LicenseSummary::from($license) : null,
 			$attributes['domain'],
 			$attributes['is_production'],
-			$products
+			ValidatedProductCollection::from($attributes['products'])
 		);
 	}
 
@@ -118,10 +111,7 @@ final class Validate implements Response
 			'license'       => $this->license ? $this->license->toArray() : null,
 			'domain'        => $this->domain,
 			'is_production' => $this->isProduction,
-			'products'      => array_map(
-				static fn (ProductValidation $product): array => $product->toArray(),
-				$this->products
-			),
+			'products'      => $this->products->toArray(),
 		];
 	}
 }
