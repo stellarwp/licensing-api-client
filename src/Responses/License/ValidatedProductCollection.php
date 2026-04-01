@@ -118,6 +118,15 @@ final class ValidatedProductCollection implements ArrayAccess, Countable, Iterat
 	}
 
 	/**
+	 * Return the underlying product validations as a raw object array.
+	 *
+	 * @return list<ProductValidation>
+	 */
+	public function all(): array {
+		return $this->items;
+	}
+
+	/**
 	 * Determine whether any validation in the current collection exposes a capability.
 	 */
 	public function hasCapability(string $capability): bool {

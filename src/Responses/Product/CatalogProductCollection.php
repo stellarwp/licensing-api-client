@@ -110,6 +110,15 @@ final class CatalogProductCollection implements ArrayAccess, Countable, Iterator
 	}
 
 	/**
+	 * Return the underlying catalog entries as a raw object array.
+	 *
+	 * @return list<CatalogEntry>
+	 */
+	public function all(): array {
+		return $this->items;
+	}
+
+	/**
 	 * Determine whether any entry in the current collection exposes a capability.
 	 */
 	public function hasCapability(string $capability): bool {
