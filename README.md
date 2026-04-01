@@ -14,20 +14,7 @@ This package is the core API layer they build on top of.
 
 ## Installation
 
-Update your composer.json and add the following to your `repositories` object:
-
-```json
-{
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:stellarwp/licensing-api-client.git"
-        }
-    ]
-}
-```
-
-Then, install:
+Install with composer:
 
 ```shell
 composer require stellarwp/licensing-api-client
