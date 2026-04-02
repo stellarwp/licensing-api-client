@@ -102,6 +102,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  * @phpstan-type ActivateResponsePayload array{
  *     status: string,
  *     is_valid: bool,
+ *     is_production: bool,
  *     license: array{license_key: string, status: string}|null,
  *     entitlement: array{
  *         product_slug: string,

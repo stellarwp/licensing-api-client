@@ -13,6 +13,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
  * @implements Response<array{
  *     status: string,
  *     is_valid: bool,
+ *     is_production: bool,
  *     license: array{license_key: string, status: string}|null,
  *     entitlement: array{
  *         product_slug: string,
@@ -34,6 +35,8 @@ final class Activate implements Response
 
 	public bool $isValid;
 
+	public bool $isProduction;
+
 	public ?LicenseSummary $license;
 
 	public ?ActivationEntitlement $entitlement;
@@ -43,21 +46,24 @@ final class Activate implements Response
 	private function __construct(
 		string $status,
 		bool $isValid,
+		bool $isProduction,
 		?LicenseSummary $license,
 		?ActivationEntitlement $entitlement,
 		?Activation $activation
 	) {
-		$this->status      = $status;
-		$this->isValid     = $isValid;
-		$this->license     = $license;
-		$this->entitlement = $entitlement;
-		$this->activation  = $activation;
+		$this->status       = $status;
+		$this->isValid      = $isValid;
+		$this->isProduction = $isProduction;
+		$this->license      = $license;
+		$this->entitlement  = $entitlement;
+		$this->activation   = $activation;
 	}
 
 	/**
 	 * @param array{
 	 *     status: string,
 	 *     is_valid: bool,
+	 *     is_production?: bool,
 	 *     license: array{license_key: string, status: string}|null,
 	 *     entitlement: array{
 	 *         product_slug: string,
@@ -81,6 +87,7 @@ final class Activate implements Response
 		return new self(
 			$attributes['status'],
 			$attributes['is_valid'],
+			$attributes['is_production'] ?? true,
 			$license ? LicenseSummary::from($license) : null,
 			$entitlement ? ActivationEntitlement::from($entitlement) : null,
 			$activation ? Activation::from($activation) : null
@@ -89,11 +96,12 @@ final class Activate implements Response
 
 	public function toArray(): array {
 		return [
-			'status'      => $this->status,
-			'is_valid'    => $this->isValid,
-			'license'     => $this->license ? $this->license->toArray() : null,
-			'entitlement' => $this->entitlement ? $this->entitlement->toArray() : null,
-			'activation'  => $this->activation ? $this->activation->toArray() : null,
+			'status'        => $this->status,
+			'is_valid'      => $this->isValid,
+			'is_production' => $this->isProduction,
+			'license'       => $this->license ? $this->license->toArray() : null,
+			'entitlement'   => $this->entitlement ? $this->entitlement->toArray() : null,
+			'activation'    => $this->activation ? $this->activation->toArray() : null,
 		];
 	}
 }
