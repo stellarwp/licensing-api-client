@@ -17,15 +17,20 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
  *         status: string,
  *         created_at: string,
  *         updated_at: string,
- *         subscriptions: list<array{
+ *         products: list<array{
  *             product_slug: string,
  *             tier: string,
- *             site_limit: int,
- *             active_count: int,
  *             status: string,
- *             expiration_date: string,
- *             purchase_date: string
- *         }>
+ *             expires: string,
+ *             capabilities: list<string>,
+ *             activations: array{
+ *                 site_limit: int,
+ *                 active_count: int,
+ *                 over_limit: bool,
+ *                 domains: list<string>
+ *             }
+ *         }>,
+ *         aliases: list<array{alias_key: string, product_slug: string|null}>
  *     }>,
  *     links: array{
  *         first: string,
@@ -70,15 +75,20 @@ final class Listing implements Response
 	 *         status: string,
 	 *         created_at: string,
 	 *         updated_at: string,
-	 *         subscriptions: list<array{
-	 *             product_slug: string,
-	 *             tier: string,
-	 *             site_limit: int,
-	 *             active_count: int,
-	 *             status: string,
-	 *             expiration_date: string,
-	 *             purchase_date: string
-	 *         }>
+	 *         products: list<array{
+ *             product_slug: string,
+ *             tier: string,
+ *             status: string,
+ *             expires: string,
+ *             capabilities: list<string>,
+ *             activations: array{
+ *                 site_limit: int,
+ *                 active_count: int,
+ *                 over_limit: bool,
+ *                 domains: list<string>
+ *             }
+ *         }>,
+ *         aliases: list<array{alias_key: string, product_slug?: string|null}>
 	 *     }>,
 	 *     links: array{
 	 *         first: string,
@@ -111,15 +121,20 @@ final class Listing implements Response
 	 *         status: string,
 	 *         created_at: string,
 	 *         updated_at: string,
-	 *         subscriptions: list<array{
-	 *             product_slug: string,
-	 *             tier: string,
-	 *             site_limit: int,
-	 *             active_count: int,
-	 *             status: string,
-	 *             expiration_date: string,
-	 *             purchase_date: string
-	 *         }>
+	 *         products: list<array{
+ *             product_slug: string,
+ *             tier: string,
+ *             status: string,
+ *             expires: string,
+ *             capabilities: list<string>,
+ *             activations: array{
+ *                 site_limit: int,
+ *                 active_count: int,
+ *                 over_limit: bool,
+ *                 domains: list<string>
+ *             }
+ *         }>,
+ *         aliases: list<array{alias_key: string, product_slug: string|null}>
 	 *     }>,
 	 *     links: array{
 	 *         first: string,

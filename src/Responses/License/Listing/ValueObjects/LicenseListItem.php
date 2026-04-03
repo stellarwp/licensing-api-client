@@ -5,6 +5,7 @@ namespace LiquidWeb\LicensingApiClient\Responses\License\Listing\ValueObjects;
 use DateTimeImmutable;
 use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
+use LiquidWeb\LicensingApiClient\Responses\License\Alias\ValueObjects\ImportedAlias;
 
 /**
  * Represents a single license in a cursor-paginated listing.
@@ -15,15 +16,20 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
  *     status: string,
  *     created_at: string,
  *     updated_at: string,
- *     subscriptions: list<array{
+ *     products: list<array{
  *         product_slug: string,
  *         tier: string,
- *         site_limit: int,
- *         active_count: int,
  *         status: string,
- *         expiration_date: string,
- *         purchase_date: string
- *     }>
+ *         expires: string,
+ *         capabilities: list<string>,
+ *         activations: array{
+ *             site_limit: int,
+ *             active_count: int,
+ *             over_limit: bool,
+ *             domains: list<string>
+ *         }
+ *     }>,
+ *     aliases: list<array{alias_key: string, product_slug: string|null}>
  * }>
  */
 final class LicenseListItem implements Response
@@ -40,13 +46,15 @@ final class LicenseListItem implements Response
 
 	public DateTimeImmutable $updatedAt;
 
-	/**
-	 * @var SubscriptionSummary[]
-	 */
-	public array $subscriptions;
+	public ListedProductCollection $products;
 
 	/**
-	 * @param SubscriptionSummary[] $subscriptions
+	 * @var ImportedAlias[]
+	 */
+	public array $aliases;
+
+	/**
+	 * @param ImportedAlias[] $aliases
 	 */
 	private function __construct(
 		string $licenseKey,
@@ -54,14 +62,16 @@ final class LicenseListItem implements Response
 		string $status,
 		DateTimeImmutable $createdAt,
 		DateTimeImmutable $updatedAt,
-		array $subscriptions
+		ListedProductCollection $products,
+		array $aliases
 	) {
-		$this->licenseKey    = $licenseKey;
-		$this->identityId    = $identityId;
-		$this->status        = $status;
-		$this->createdAt     = $createdAt;
-		$this->updatedAt     = $updatedAt;
-		$this->subscriptions = $subscriptions;
+		$this->licenseKey = $licenseKey;
+		$this->identityId = $identityId;
+		$this->status     = $status;
+		$this->createdAt  = $createdAt;
+		$this->updatedAt  = $updatedAt;
+		$this->products   = $products;
+		$this->aliases    = $aliases;
 	}
 
 	/**
@@ -71,15 +81,20 @@ final class LicenseListItem implements Response
 	 *     status: string,
 	 *     created_at: string,
 	 *     updated_at: string,
-	 *     subscriptions: list<array{
-	 *         product_slug: string,
-	 *         tier: string,
-	 *         site_limit: int,
-	 *         active_count: int,
-	 *         status: string,
-	 *         expiration_date: string,
-	 *         purchase_date: string
-	 *     }>
+	 *     products: list<array{
+ *         product_slug: string,
+ *         tier: string,
+ *         status: string,
+ *         expires: string,
+ *         capabilities: list<string>,
+ *         activations: array{
+ *             site_limit: int,
+ *             active_count: int,
+ *             over_limit: bool,
+ *             domains: list<string>
+ *         }
+ *     }>,
+ *     aliases: list<array{alias_key: string, product_slug?: string|null}>
 	 * } $attributes
 	 */
 	public static function from(array $attributes): self {
@@ -89,9 +104,10 @@ final class LicenseListItem implements Response
 			$attributes['status'],
 			self::parseDateTime($attributes['created_at']),
 			self::parseDateTime($attributes['updated_at']),
+			ListedProductCollection::from($attributes['products']),
 			array_map(
-				static fn (array $subscription): SubscriptionSummary => SubscriptionSummary::from($subscription),
-				$attributes['subscriptions']
+				static fn (array $alias): ImportedAlias => ImportedAlias::from($alias),
+				$attributes['aliases']
 			)
 		);
 	}
@@ -103,27 +119,33 @@ final class LicenseListItem implements Response
 	 *     status: string,
 	 *     created_at: string,
 	 *     updated_at: string,
-	 *     subscriptions: list<array{
-	 *         product_slug: string,
-	 *         tier: string,
-	 *         site_limit: int,
-	 *         active_count: int,
-	 *         status: string,
-	 *         expiration_date: string,
-	 *         purchase_date: string
-	 *     }>
+	 *     products: list<array{
+ *         product_slug: string,
+ *         tier: string,
+ *         status: string,
+ *         expires: string,
+ *         capabilities: list<string>,
+ *         activations: array{
+ *             site_limit: int,
+ *             active_count: int,
+ *             over_limit: bool,
+ *             domains: list<string>
+ *         }
+ *     }>,
+ *     aliases: list<array{alias_key: string, product_slug: string|null}>
 	 * }
 	 */
 	public function toArray(): array {
 		return [
-			'license_key'   => $this->licenseKey,
-			'identity_id'   => $this->identityId,
-			'status'        => $this->status,
-			'created_at'    => $this->createdAt->format('Y-m-d H:i:s'),
-			'updated_at'    => $this->updatedAt->format('Y-m-d H:i:s'),
-			'subscriptions' => array_map(
-				static fn (SubscriptionSummary $subscription): array => $subscription->toArray(),
-				$this->subscriptions
+			'license_key' => $this->licenseKey,
+			'identity_id' => $this->identityId,
+			'status'      => $this->status,
+			'created_at'  => $this->createdAt->format('Y-m-d H:i:s'),
+			'updated_at'  => $this->updatedAt->format('Y-m-d H:i:s'),
+			'products'    => $this->products->toArray(),
+			'aliases'     => array_map(
+				static fn (ImportedAlias $alias): array => $alias->toArray(),
+				$this->aliases
 			),
 		];
 	}
