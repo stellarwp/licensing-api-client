@@ -90,7 +90,7 @@ final class ActivationEntitlement implements Response
 			'product_slug'    => $this->productSlug,
 			'tier'            => $this->tier,
 			'site_limit'      => $this->siteLimit,
-			'expiration_date' => $this->expirationDate->format('Y-m-d H:i:s'),
+			'expiration_date' => $this->formatDateTime($this->expirationDate),
 			'status'          => $this->status,
 			'capabilities'    => $this->capabilities->toArray(),
 		];

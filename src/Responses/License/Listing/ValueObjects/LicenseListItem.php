@@ -10,6 +10,13 @@ use LiquidWeb\LicensingApiClient\Responses\License\Alias\ValueObjects\ImportedAl
 /**
  * Represents a single license in a cursor-paginated listing.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
+ *
  * @implements Response<array{
  *     license_key: string,
  *     identity_id: string,
@@ -26,7 +33,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\Alias\ValueObjects\ImportedAl
  *             site_limit: int,
  *             active_count: int,
  *             over_limit: bool,
- *             domains: list<string>
+ *             domains: ActivationDomainsPayload
  *         }
  *     }>,
  *     aliases: list<array{alias_key: string, product_slug: string|null}>
@@ -82,19 +89,19 @@ final class LicenseListItem implements Response
 	 *     created_at: string,
 	 *     updated_at: string,
 	 *     products: list<array{
- *         product_slug: string,
- *         tier: string,
- *         status: string,
- *         expires: string,
- *         capabilities: list<string>,
- *         activations: array{
- *             site_limit: int,
- *             active_count: int,
- *             over_limit: bool,
- *             domains: list<string>
- *         }
- *     }>,
- *     aliases: list<array{alias_key: string, product_slug?: string|null}>
+	 *         product_slug: string,
+	 *         tier: string,
+	 *         status: string,
+	 *         expires: string,
+	 *         capabilities: list<string>,
+	 *         activations: array{
+	 *             site_limit: int,
+	 *             active_count: int,
+	 *             over_limit: bool,
+	 *             domains: ActivationDomainsPayload
+	 *         }
+	 *     }>,
+	 *     aliases: list<array{alias_key: string, product_slug?: string|null}>
 	 * } $attributes
 	 */
 	public static function from(array $attributes): self {
@@ -120,19 +127,19 @@ final class LicenseListItem implements Response
 	 *     created_at: string,
 	 *     updated_at: string,
 	 *     products: list<array{
- *         product_slug: string,
- *         tier: string,
- *         status: string,
- *         expires: string,
- *         capabilities: list<string>,
- *         activations: array{
- *             site_limit: int,
- *             active_count: int,
- *             over_limit: bool,
- *             domains: list<string>
- *         }
- *     }>,
- *     aliases: list<array{alias_key: string, product_slug: string|null}>
+	 *         product_slug: string,
+	 *         tier: string,
+	 *         status: string,
+	 *         expires: string,
+	 *         capabilities: list<string>,
+	 *         activations: array{
+	 *             site_limit: int,
+	 *             active_count: int,
+	 *             over_limit: bool,
+	 *             domains: ActivationDomainsPayload
+	 *         }
+	 *     }>,
+	 *     aliases: list<array{alias_key: string, product_slug: string|null}>
 	 * }
 	 */
 	public function toArray(): array {
@@ -140,8 +147,8 @@ final class LicenseListItem implements Response
 			'license_key' => $this->licenseKey,
 			'identity_id' => $this->identityId,
 			'status'      => $this->status,
-			'created_at'  => $this->createdAt->format('Y-m-d H:i:s'),
-			'updated_at'  => $this->updatedAt->format('Y-m-d H:i:s'),
+			'created_at'  => $this->formatDateTime($this->createdAt),
+			'updated_at'  => $this->formatDateTime($this->updatedAt),
 			'products'    => $this->products->toArray(),
 			'aliases'     => array_map(
 				static fn (ImportedAlias $alias): array => $alias->toArray(),

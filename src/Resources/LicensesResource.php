@@ -32,6 +32,12 @@ use Psr\Http\Client\ClientExceptionInterface;
 /**
  * Provides operations for the licenses API resource.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
  * @phpstan-type ValidatePayload array{
  *     license: array{license_key: string, status: string}|null,
  *     domain: string,
@@ -79,7 +85,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *                 site_limit: int,
  *                 active_count: int,
  *                 over_limit: bool,
- *                 domains: list<string>
+ *                 domains: ActivationDomainsPayload
  *             }
  *         }>,
  *         aliases: list<array{alias_key: string, product_slug: string|null}>
@@ -258,8 +264,6 @@ final class LicensesResource implements LicensesResourceInterface
 	 * @throws JsonException
 	 */
 	public function validate(string $licenseKey, array $productSlugs, string $domain): Validate {
-		$token = $this->authState->optionalToken();
-
 		$result = $this->requestExecutor->executeJson(
 			'GET',
 			$this->apiUriFactory->make('/licenses/validate'),
@@ -269,7 +273,7 @@ final class LicensesResource implements LicensesResourceInterface
 				'domain'        => $domain,
 			],
 			null,
-			$token
+			$this->authState->optionalToken()
 		);
 
 		/** @var ValidatePayload $result */

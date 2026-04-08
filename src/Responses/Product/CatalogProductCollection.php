@@ -14,6 +14,13 @@ use Traversable;
 /**
  * Immutable collection of catalog product entries with filtering helpers.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
+ *
  * @implements Response<list<array{
  *     product_slug: string,
  *     tier: string,
@@ -24,7 +31,7 @@ use Traversable;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
- *         domains: list<string>
+ *         domains: ActivationDomainsPayload
  *     },
  *     activated_here?: bool,
  *     validation_status?: string,
@@ -58,7 +65,7 @@ final class CatalogProductCollection implements ArrayAccess, Countable, Iterator
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
-	 *         domains: list<string>
+	 *         domains: ActivationDomainsPayload
 	 *     },
 	 *     activated_here?: bool,
 	 *     validation_status?: string,

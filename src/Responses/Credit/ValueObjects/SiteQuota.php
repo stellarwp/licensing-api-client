@@ -98,7 +98,7 @@ final class SiteQuota implements Response
 			'credit_type'        => $this->creditType,
 			'quota'              => $this->quota,
 			'period'             => $this->period,
-			'first_period_start' => $this->firstPeriodStart ? $this->firstPeriodStart->format('Y-m-d H:i:s') : null,
+			'first_period_start' => $this->firstPeriodStart ? $this->formatDateTime($this->firstPeriodStart) : null,
 			'is_blocked'         => $this->isBlocked,
 			'is_uncapped'        => $this->isUncapped,
 		];

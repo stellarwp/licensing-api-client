@@ -10,6 +10,13 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
 /**
  * Represents a cursor-paginated license listing.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
+ *
  * @implements Response<array{
  *     licenses: list<array{
  *         license_key: string,
@@ -27,7 +34,7 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
  *                 site_limit: int,
  *                 active_count: int,
  *                 over_limit: bool,
- *                 domains: list<string>
+ *                 domains: ActivationDomainsPayload
  *             }
  *         }>,
  *         aliases: list<array{alias_key: string, product_slug: string|null}>
@@ -76,19 +83,19 @@ final class Listing implements Response
 	 *         created_at: string,
 	 *         updated_at: string,
 	 *         products: list<array{
- *             product_slug: string,
- *             tier: string,
- *             status: string,
- *             expires: string,
- *             capabilities: list<string>,
- *             activations: array{
- *                 site_limit: int,
- *                 active_count: int,
- *                 over_limit: bool,
- *                 domains: list<string>
- *             }
- *         }>,
- *         aliases: list<array{alias_key: string, product_slug?: string|null}>
+	 *             product_slug: string,
+	 *             tier: string,
+	 *             status: string,
+	 *             expires: string,
+	 *             capabilities: list<string>,
+	 *             activations: array{
+	 *                 site_limit: int,
+	 *                 active_count: int,
+	 *                 over_limit: bool,
+	 *                 domains: ActivationDomainsPayload
+	 *             }
+	 *         }>,
+	 *         aliases: list<array{alias_key: string, product_slug?: string|null}>
 	 *     }>,
 	 *     links: array{
 	 *         first: string,
@@ -122,19 +129,19 @@ final class Listing implements Response
 	 *         created_at: string,
 	 *         updated_at: string,
 	 *         products: list<array{
- *             product_slug: string,
- *             tier: string,
- *             status: string,
- *             expires: string,
- *             capabilities: list<string>,
- *             activations: array{
- *                 site_limit: int,
- *                 active_count: int,
- *                 over_limit: bool,
- *                 domains: list<string>
- *             }
- *         }>,
- *         aliases: list<array{alias_key: string, product_slug: string|null}>
+	 *             product_slug: string,
+	 *             tier: string,
+	 *             status: string,
+	 *             expires: string,
+	 *             capabilities: list<string>,
+	 *             activations: array{
+	 *                 site_limit: int,
+	 *                 active_count: int,
+	 *                 over_limit: bool,
+	 *                 domains: ActivationDomainsPayload
+	 *             }
+	 *         }>,
+	 *         aliases: list<array{alias_key: string, product_slug: string|null}>
 	 *     }>,
 	 *     links: array{
 	 *         first: string,

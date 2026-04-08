@@ -125,8 +125,8 @@ final class CreditPool implements Response
 			'overage_limit'      => $this->overageLimit,
 			'priority'           => $this->priority,
 			'period'             => $this->period,
-			'first_period_start' => $this->firstPeriodStart ? $this->firstPeriodStart->format('Y-m-d H:i:s') : null,
-			'expires_at'         => $this->expiresAt ? $this->expiresAt->format('Y-m-d H:i:s') : null,
+			'first_period_start' => $this->firstPeriodStart ? $this->formatDateTime($this->firstPeriodStart) : null,
+			'expires_at'         => $this->expiresAt ? $this->formatDateTime($this->expiresAt) : null,
 			'is_expired'         => $this->isExpired,
 		];
 	}

@@ -3,6 +3,7 @@
 namespace LiquidWeb\LicensingApiClient\Responses\Product\ValueObjects;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use LiquidWeb\LicensingApiClient\Concerns\InteractsWithDateTime;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
@@ -10,6 +11,13 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
 
 /**
  * Represents one entitlement entry in the product catalog.
+ *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
  *
  * @implements Response<array{
  *     product_slug: string,
@@ -21,7 +29,7 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
- *         domains: list<string>
+ *         domains: ActivationDomainsPayload
  *     },
  *     activated_here?: bool,
  *     validation_status?: string,
@@ -50,8 +58,6 @@ final class CatalogEntry implements Response
 
 	public ?bool $isValid;
 
-	/**
-	 */
 	private function __construct(
 		string $productSlug,
 		string $tier,
@@ -85,7 +91,7 @@ final class CatalogEntry implements Response
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
-	 *         domains: list<string>
+	 *         domains: ActivationDomainsPayload
 	 *     },
 	 *     activated_here?: bool,
 	 *     validation_status?: string,
@@ -113,7 +119,7 @@ final class CatalogEntry implements Response
 			'product_slug' => $this->productSlug,
 			'tier'         => $this->tier,
 			'status'       => $this->status,
-			'expires'      => $this->expires->format('Y-m-d H:i:s'),
+			'expires'      => $this->formatDateTime($this->expires),
 			'capabilities' => $this->capabilities->toArray(),
 			'activations'  => $this->activations->toArray(),
 		], array_filter([
@@ -123,13 +129,19 @@ final class CatalogEntry implements Response
 		], static fn ($value): bool => $value !== null));
 	}
 
-	public function isActive(): bool {
+	public function hasActiveStatus(): bool {
 		return $this->status === 'active';
 	}
 
-	/**
-	 * Determine whether this catalog entry was evaluated against a specific site domain.
-	 */
+	public function isExpired(): bool {
+		return $this->expires < new DateTimeImmutable('now', new DateTimeZone('UTC'));
+	}
+
+	public function isActive(): bool {
+		return $this->hasActiveStatus()
+			&& ! $this->isExpired();
+	}
+
 	public function hasCurrentSiteValidation(): bool {
 		return $this->validationStatus !== null;
 	}

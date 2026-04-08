@@ -2,6 +2,7 @@
 
 namespace LiquidWeb\LicensingApiClient\Responses\Product\ValueObjects;
 
+use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 
 /**
@@ -11,7 +12,11 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
  *     site_limit: int,
  *     active_count: int,
  *     over_limit: bool,
- *     domains: list<string>
+ *     domains: array<string, array{
+ *         activated_at: string,
+ *         deactivated_at: string|null,
+ *         is_active: bool
+ *     }>
  * }>
  */
 final class Activations implements Response
@@ -22,11 +27,11 @@ final class Activations implements Response
 
 	public bool $overLimit;
 
-	/** @var list<string> */
+	/** @var array<string, ActivationDomain> */
 	public array $domains;
 
 	/**
-	 * @param list<string> $domains
+	 * @param array<string, ActivationDomain> $domains
 	 */
 	private function __construct(
 		int $siteLimit,
@@ -45,24 +50,55 @@ final class Activations implements Response
 	 *     site_limit: int,
 	 *     active_count: int,
 	 *     over_limit: bool,
-	 *     domains: list<string>
+	 *     domains: array<string, array{
+	 *         activated_at: string,
+	 *         deactivated_at: string|null,
+	 *         is_active: bool
+	 *     }>
 	 * } $attributes
+	 *
+	 * @throws UnexpectedResponseException
 	 */
 	public static function from(array $attributes): self {
 		return new self(
 			$attributes['site_limit'],
 			$attributes['active_count'],
 			$attributes['over_limit'],
-			$attributes['domains']
+			array_map(
+				static fn (array $domain): ActivationDomain => ActivationDomain::from($domain),
+				$attributes['domains']
+			)
 		);
 	}
 
+	/**
+	 * Return the activation metadata for a specific domain, or null when absent.
+	 */
+	public function forDomain(string $domain): ?ActivationDomain {
+		return $this->domains[$domain] ?? null;
+	}
+
+	/**
+	 * @return array{
+	 *     site_limit: int,
+	 *     active_count: int,
+	 *     over_limit: bool,
+	 *     domains: array<string, array{
+	 *         activated_at: string,
+	 *         deactivated_at: string|null,
+	 *         is_active: bool
+	 *     }>
+	 * }
+	 */
 	public function toArray(): array {
 		return [
 			'site_limit'   => $this->siteLimit,
 			'active_count' => $this->activeCount,
 			'over_limit'   => $this->overLimit,
-			'domains'      => $this->domains,
+			'domains'      => array_map(
+				static fn (ActivationDomain $domain): array => $domain->toArray(),
+				$this->domains
+			),
 		];
 	}
 }

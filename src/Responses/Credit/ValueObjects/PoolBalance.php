@@ -108,8 +108,8 @@ final class PoolBalance implements Response
 			'pool_remaining' => $this->poolRemaining,
 			'priority'       => $this->priority,
 			'period'         => $this->period,
-			'resets_on'      => $this->resetsOn ? $this->resetsOn->format('Y-m-d H:i:s') : null,
-			'expires_at'     => $this->expiresAt ? $this->expiresAt->format('Y-m-d H:i:s') : null,
+			'resets_on'      => $this->resetsOn ? $this->formatDateTime($this->resetsOn) : null,
+			'expires_at'     => $this->expiresAt ? $this->formatDateTime($this->expiresAt) : null,
 		];
 
 		$data = array_merge($data, array_filter([

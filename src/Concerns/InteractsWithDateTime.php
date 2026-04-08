@@ -30,6 +30,9 @@ trait InteractsWithDateTime
 		return $value === null ? null : self::parseDateTime($value);
 	}
 
+	/**
+	 * Format a DateTimeImmutable for the API's UTC RFC3339 wire format.
+	 */
 	private function formatDateTime(DateTimeImmutable $dt): string {
 		return $dt->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
 	}

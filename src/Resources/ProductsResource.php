@@ -17,6 +17,12 @@ use Psr\Http\Client\ClientExceptionInterface;
 /**
  * Provides operations for the products API resource.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
  * @phpstan-type CatalogPayload array{
  *     products: list<array{
  *         product_slug: string,
@@ -28,7 +34,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *             site_limit: int,
  *             active_count: int,
  *             over_limit: bool,
- *             domains: list<string>
+ *             domains: ActivationDomainsPayload
  *         },
  *         activated_here?: bool,
  *         validation_status?: string,

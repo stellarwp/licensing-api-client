@@ -13,6 +13,13 @@ use Traversable;
 /**
  * Immutable collection of products nested under a license listing response.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
+ *
  * @implements Response<list<array{
  *     product_slug: string,
  *     tier: string,
@@ -23,7 +30,7 @@ use Traversable;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
- *         domains: list<string>
+ *         domains: ActivationDomainsPayload
  *     }
  * }>>
  * @implements ArrayAccess<int, ListedProduct>
@@ -54,7 +61,7 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
-	 *         domains: list<string>
+	 *         domains: ActivationDomainsPayload
 	 *     }
 	 * }> $attributes
 	 */
@@ -65,6 +72,9 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 		));
 	}
 
+	/**
+	 * Return only entries for a specific product slug.
+	 */
 	public function forProduct(string $productSlug): self {
 		return new self(array_values(array_filter(
 			$this->items,
@@ -72,6 +82,9 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 		)));
 	}
 
+	/**
+	 * Return only entries whose entitlement is currently active.
+	 */
 	public function active(): self {
 		return new self(array_values(array_filter(
 			$this->items,
@@ -79,17 +92,25 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 		)));
 	}
 
+	/**
+	 * Return the first entry in the collection, or null when it is empty.
+	 */
 	public function first(): ?ListedProduct {
 		return $this->items[0] ?? null;
 	}
 
 	/**
+	 * Return the underlying listed products as a raw object array.
+	 *
 	 * @return list<ListedProduct>
 	 */
 	public function all(): array {
 		return $this->items;
 	}
 
+	/**
+	 * Determine whether any entry in the current collection exposes a capability.
+	 */
 	public function hasCapability(string $capability): bool {
 		foreach ($this->items as $entry) {
 			if ($entry->hasCapability($capability)) {
@@ -100,6 +121,9 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 		return false;
 	}
 
+	/**
+	 * Return the number of items in the collection.
+	 */
 	public function count(): int {
 		return count($this->items);
 	}
@@ -129,6 +153,23 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 		return $this->items[$offset] ?? null;
 	}
 
+	/**
+	 * Convert the collection back to the API response payload shape.
+	 *
+	 * @return list<array{
+	 *     product_slug: string,
+	 *     tier: string,
+	 *     status: string,
+	 *     expires: string,
+	 *     capabilities: list<string>,
+	 *     activations: array{
+	 *         site_limit: int,
+	 *         active_count: int,
+	 *         over_limit: bool,
+	 *         domains: ActivationDomainsPayload
+	 *     }
+	 * }>
+	 */
 	public function toArray(): array {
 		return array_map(
 			static fn (ListedProduct $entry): array => $entry->toArray(),
@@ -139,6 +180,8 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 	/**
 	 * @param int|string|mixed $offset
 	 * @param mixed $value Ignored because the collection is immutable.
+	 *
+	 * @throws LogicException
 	 */
 	public function offsetSet($offset, $value): void {
 		throw new LogicException('ListedProductCollection is immutable.');
@@ -146,6 +189,8 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 
 	/**
 	 * @param int|string|mixed $offset
+	 *
+	 * @throws LogicException
 	 */
 	public function offsetUnset($offset): void {
 		throw new LogicException('ListedProductCollection is immutable.');

@@ -40,7 +40,7 @@ final class Activation implements Response
 	public function toArray(): array {
 		return [
 			'domain'       => $this->domain,
-			'activated_at' => $this->activatedAt->format('Y-m-d H:i:s'),
+			'activated_at' => $this->formatDateTime($this->activatedAt),
 		];
 	}
 }

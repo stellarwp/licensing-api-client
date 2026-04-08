@@ -7,6 +7,13 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
 /**
  * Represents the product catalog response payload.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
+ *
  * @implements Response<array{
  *     products: list<array{
  *         product_slug: string,
@@ -18,7 +25,7 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
  *             site_limit: int,
  *             active_count: int,
  *             over_limit: bool,
- *             domains: list<string>
+ *             domains: ActivationDomainsPayload
  *         },
  *         activated_here?: bool,
  *         validation_status?: string,
@@ -30,8 +37,6 @@ final class Catalog implements Response
 {
 	public CatalogProductCollection $products;
 
-	/**
-	 */
 	private function __construct(CatalogProductCollection $products) {
 		$this->products = $products;
 	}
@@ -48,7 +53,7 @@ final class Catalog implements Response
 	 *             site_limit: int,
 	 *             active_count: int,
 	 *             over_limit: bool,
-	 *             domains: list<string>
+	 *             domains: ActivationDomainsPayload
 	 *         },
 	 *         activated_here?: bool,
 	 *         validation_status?: string,

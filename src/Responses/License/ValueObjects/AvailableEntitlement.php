@@ -90,7 +90,7 @@ final class AvailableEntitlement implements Response
 			'available'    => $this->available,
 			'capabilities' => $this->capabilities->toArray(),
 			'status'       => $this->status,
-			'expires'      => $this->expires->format('Y-m-d H:i:s'),
+			'expires'      => $this->formatDateTime($this->expires),
 		];
 	}
 }

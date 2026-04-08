@@ -30,12 +30,12 @@ final class UpsertProduct
 	public ?int $siteLimit;
 
 	/**
-	 * Entitlement expiration date in the API's expected `Y-m-d H:i:s` format.
+	 * Entitlement expiration date in a format accepted by the API, including RFC3339 UTC `Z`, RFC3339 with an explicit offset, or MySQL DATETIME.
 	 */
 	public ?string $expirationDate;
 
 	/**
-	 * Purchase date in the API's expected `Y-m-d H:i:s` format.
+	 * Purchase date in a format accepted by the API, including RFC3339 UTC `Z`, RFC3339 with an explicit offset, or MySQL DATETIME.
 	 */
 	public ?string $purchaseDate;
 

@@ -12,6 +12,13 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
 /**
  * Represents one product entry nested under a license listing response.
  *
+ * @phpstan-type ActivationDomainPayload array{
+ *     activated_at: string,
+ *     deactivated_at: string|null,
+ *     is_active: bool
+ * }
+ * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
+ *
  * @implements Response<array{
  *     product_slug: string,
  *     tier: string,
@@ -22,7 +29,7 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
- *         domains: list<string>
+ *         domains: ActivationDomainsPayload
  *     }
  * }>
  */
@@ -69,7 +76,7 @@ final class ListedProduct implements Response
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
-	 *         domains: list<string>
+	 *         domains: ActivationDomainsPayload
 	 *     }
 	 * } $attributes
 	 *
@@ -91,7 +98,7 @@ final class ListedProduct implements Response
 			'product_slug' => $this->productSlug,
 			'tier'         => $this->tier,
 			'status'       => $this->status,
-			'expires'      => $this->expires->format('Y-m-d H:i:s'),
+			'expires'      => $this->formatDateTime($this->expires),
 			'capabilities' => $this->capabilities->toArray(),
 			'activations'  => $this->activations->toArray(),
 		];
