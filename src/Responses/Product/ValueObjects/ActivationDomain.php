@@ -13,7 +13,8 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
  * @implements Response<array{
  *     activated_at: string,
  *     deactivated_at: string|null,
- *     is_active: bool
+ *     is_active: bool,
+ *     is_production: bool
  * }>
  */
 final class ActivationDomain implements Response
@@ -26,21 +27,26 @@ final class ActivationDomain implements Response
 
 	public bool $isActive;
 
+	public bool $isProduction;
+
 	private function __construct(
 		DateTimeImmutable $activatedAt,
 		?DateTimeImmutable $deactivatedAt,
-		bool $isActive
+		bool $isActive,
+		bool $isProduction
 	) {
 		$this->activatedAt   = $activatedAt;
 		$this->deactivatedAt = $deactivatedAt;
 		$this->isActive      = $isActive;
+		$this->isProduction  = $isProduction;
 	}
 
 	/**
 	 * @param array{
 	 *     activated_at: string,
 	 *     deactivated_at: string|null,
-	 *     is_active: bool
+	 *     is_active: bool,
+	 *     is_production: bool
 	 * } $attributes
 	 *
 	 * @throws UnexpectedResponseException
@@ -51,7 +57,8 @@ final class ActivationDomain implements Response
 			$attributes['deactivated_at'] !== null
 				? self::parseDateTime($attributes['deactivated_at'])
 				: null,
-			$attributes['is_active']
+			$attributes['is_active'],
+			$attributes['is_production']
 		);
 	}
 
@@ -60,6 +67,7 @@ final class ActivationDomain implements Response
 			'activated_at'   => $this->formatDateTime($this->activatedAt),
 			'deactivated_at' => $this->deactivatedAt ? $this->formatDateTime($this->deactivatedAt) : null,
 			'is_active'      => $this->isActive,
+			'is_production'  => $this->isProduction,
 		];
 	}
 }

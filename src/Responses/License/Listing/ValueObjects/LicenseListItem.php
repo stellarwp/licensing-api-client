@@ -13,7 +13,8 @@ use LiquidWeb\LicensingApiClient\Responses\License\Alias\ValueObjects\ImportedAl
  * @phpstan-type ActivationDomainPayload array{
  *     activated_at: string,
  *     deactivated_at: string|null,
- *     is_active: bool
+ *     is_active: bool,
+ *     is_production: bool
  * }
  * @phpstan-type ActivationDomainsPayload array<string, ActivationDomainPayload>
  *

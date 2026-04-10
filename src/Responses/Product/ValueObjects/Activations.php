@@ -15,7 +15,8 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
  *     domains: array<string, array{
  *         activated_at: string,
  *         deactivated_at: string|null,
- *         is_active: bool
+ *         is_active: bool,
+ *         is_production: bool
  *     }>
  * }>
  */
@@ -53,7 +54,8 @@ final class Activations implements Response
 	 *     domains: array<string, array{
 	 *         activated_at: string,
 	 *         deactivated_at: string|null,
-	 *         is_active: bool
+	 *         is_active: bool,
+	 *         is_production: bool
 	 *     }>
 	 * } $attributes
 	 *
@@ -86,7 +88,8 @@ final class Activations implements Response
 	 *     domains: array<string, array{
 	 *         activated_at: string,
 	 *         deactivated_at: string|null,
-	 *         is_active: bool
+	 *         is_active: bool,
+	 *         is_production: bool
 	 *     }>
 	 * }
 	 */
