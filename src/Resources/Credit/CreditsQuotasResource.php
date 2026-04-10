@@ -9,8 +9,10 @@ use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Requests\Credit\SetQuota;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\Credit\DeleteQuota;
 use LiquidWeb\LicensingApiClient\Responses\Credit\QuotaCollection;
@@ -40,6 +42,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 {
 	use RebindsAuthState;
+	use RebindsRequestHeaderCollection;
 
 	private RequestExecutor $requestExecutor;
 
@@ -47,14 +50,18 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 
 	private AuthState $authState;
 
+	private RequestHeaderCollection $requestHeaderCollection;
+
 	public function __construct(
 		RequestExecutor $requestExecutor,
 		ApiUriFactory $apiUriFactory,
-		AuthState $authState
+		AuthState $authState,
+		RequestHeaderCollection $requestHeaderCollection
 	) {
-		$this->requestExecutor = $requestExecutor;
-		$this->apiUriFactory   = $apiUriFactory;
-		$this->authState       = $authState;
+		$this->requestExecutor         = $requestExecutor;
+		$this->apiUriFactory           = $apiUriFactory;
+		$this->authState               = $authState;
+		$this->requestHeaderCollection = $requestHeaderCollection;
 	}
 
 	/**
@@ -72,7 +79,8 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 				'license_key' => $licenseKey,
 			],
 			null,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var QuotaCollectionPayload $result */
@@ -95,7 +103,8 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 			$this->apiUriFactory->make('/credits/quotas'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var SiteQuotaPayload $result */
@@ -119,7 +128,8 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 				'domain'      => $domain,
 				'credit_type' => $creditType,
 			],
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var DeleteQuotaPayload $result */
@@ -127,6 +137,10 @@ final class CreditsQuotasResource implements CreditsQuotasResourceInterface
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState, $this->requestHeaderCollection);
+	}
+
+	protected function rebindWithRequestHeaderCollection(RequestHeaderCollection $requestHeaderCollection): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $this->authState, $requestHeaderCollection);
 	}
 }

@@ -9,10 +9,12 @@ use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Requests\Credit\CreatePool;
 use LiquidWeb\LicensingApiClient\Requests\Credit\DeletePool as DeletePoolRequest;
 use LiquidWeb\LicensingApiClient\Requests\Credit\UpdatePool;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\Credit\DeletePool;
 use LiquidWeb\LicensingApiClient\Responses\Credit\PoolCollection;
@@ -48,6 +50,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 {
 	use RebindsAuthState;
+	use RebindsRequestHeaderCollection;
 
 	private RequestExecutor $requestExecutor;
 
@@ -55,14 +58,18 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 
 	private AuthState $authState;
 
+	private RequestHeaderCollection $requestHeaderCollection;
+
 	public function __construct(
 		RequestExecutor $requestExecutor,
 		ApiUriFactory $apiUriFactory,
-		AuthState $authState
+		AuthState $authState,
+		RequestHeaderCollection $requestHeaderCollection
 	) {
-		$this->requestExecutor = $requestExecutor;
-		$this->apiUriFactory   = $apiUriFactory;
-		$this->authState       = $authState;
+		$this->requestExecutor         = $requestExecutor;
+		$this->apiUriFactory           = $apiUriFactory;
+		$this->authState               = $authState;
+		$this->requestHeaderCollection = $requestHeaderCollection;
 	}
 
 	/**
@@ -81,7 +88,8 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 				'active'      => $active,
 			],
 			null,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var PoolCollectionPayload $result */
@@ -104,7 +112,8 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var PoolPayload $result */
@@ -127,7 +136,8 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var PoolPayload $result */
@@ -150,7 +160,8 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 			$this->apiUriFactory->make('/credits/pools'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var DeletePoolResponsePayload $result */
@@ -158,6 +169,10 @@ final class CreditsPoolsResource implements CreditsPoolsResourceInterface
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState, $this->requestHeaderCollection);
+	}
+
+	protected function rebindWithRequestHeaderCollection(RequestHeaderCollection $requestHeaderCollection): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $this->authState, $requestHeaderCollection);
 	}
 }

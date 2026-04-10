@@ -10,8 +10,10 @@ use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Requests\Credit\ListLedgerEntries;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsLedgerResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\Credit\LedgerPage;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -53,6 +55,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 {
 	use RebindsAuthState;
+	use RebindsRequestHeaderCollection;
 
 	private RequestExecutor $requestExecutor;
 
@@ -60,14 +63,18 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 
 	private AuthState $authState;
 
+	private RequestHeaderCollection $requestHeaderCollection;
+
 	public function __construct(
 		RequestExecutor $requestExecutor,
 		ApiUriFactory $apiUriFactory,
-		AuthState $authState
+		AuthState $authState,
+		RequestHeaderCollection $requestHeaderCollection
 	) {
-		$this->requestExecutor = $requestExecutor;
-		$this->apiUriFactory   = $apiUriFactory;
-		$this->authState       = $authState;
+		$this->requestExecutor         = $requestExecutor;
+		$this->apiUriFactory           = $apiUriFactory;
+		$this->authState               = $authState;
+		$this->requestHeaderCollection = $requestHeaderCollection;
 	}
 
 	/**
@@ -86,7 +93,8 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 			$this->apiUriFactory->make('/credits/ledger'),
 			$query,
 			null,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var LedgerPagePayload $result */
@@ -117,7 +125,8 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 				$this->apiUriFactory->fromPaginationLink($page->links->next),
 				[],
 				null,
-				$this->authState->requiredToken()
+				$this->authState->requiredToken(),
+				$this->requestHeaderCollection->all()
 			);
 
 			/** @var LedgerPagePayload $result */
@@ -126,6 +135,10 @@ final class CreditsLedgerResource implements CreditsLedgerResourceInterface
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState, $this->requestHeaderCollection);
+	}
+
+	protected function rebindWithRequestHeaderCollection(RequestHeaderCollection $requestHeaderCollection): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $this->authState, $requestHeaderCollection);
 	}
 }

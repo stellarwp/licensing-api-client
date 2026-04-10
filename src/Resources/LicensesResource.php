@@ -10,6 +10,7 @@ use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Requests\License\Activate as ActivateRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\ImportAliases as ImportAliasesRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\RemoveAliases as RemoveAliasesRequest;
@@ -18,6 +19,7 @@ use LiquidWeb\LicensingApiClient\Requests\License\LicenseReference;
 use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey as RegenerateKeyRequest;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\License\Activate;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases;
@@ -139,6 +141,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 final class LicensesResource implements LicensesResourceInterface
 {
 	use RebindsAuthState;
+	use RebindsRequestHeaderCollection;
 
 	private RequestExecutor $requestExecutor;
 
@@ -146,14 +149,18 @@ final class LicensesResource implements LicensesResourceInterface
 
 	private AuthState $authState;
 
+	private RequestHeaderCollection $requestHeaderCollection;
+
 	public function __construct(
 		RequestExecutor $requestExecutor,
 		ApiUriFactory $apiUriFactory,
-		AuthState $authState
+		AuthState $authState,
+		RequestHeaderCollection $requestHeaderCollection
 	) {
-		$this->requestExecutor = $requestExecutor;
-		$this->apiUriFactory   = $apiUriFactory;
-		$this->authState       = $authState;
+		$this->requestExecutor         = $requestExecutor;
+		$this->apiUriFactory           = $apiUriFactory;
+		$this->authState               = $authState;
+		$this->requestHeaderCollection = $requestHeaderCollection;
 	}
 
 	/**
@@ -172,7 +179,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/activate'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var ActivateResponsePayload $result */
@@ -195,7 +203,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/deactivate'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var DeactivateResponsePayload $result */
@@ -215,7 +224,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses'),
 			$request->toQuery(),
 			null,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var ListingPayload $result */
@@ -246,7 +256,8 @@ final class LicensesResource implements LicensesResourceInterface
 				$this->apiUriFactory->fromPaginationLink($page->links->next),
 				[],
 				null,
-				$this->authState->requiredToken()
+				$this->authState->requiredToken(),
+				$this->requestHeaderCollection->all()
 			);
 
 			/** @var ListingPayload $result */
@@ -273,7 +284,8 @@ final class LicensesResource implements LicensesResourceInterface
 				'domain'        => $domain,
 			],
 			null,
-			$this->authState->optionalToken()
+			$this->authState->optionalToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var ValidatePayload $result */
@@ -329,7 +341,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/regenerate-key'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var RegenerateKeyResponsePayload $result */
@@ -352,7 +365,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/aliases'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var ImportAliasesResponsePayload $result */
@@ -375,7 +389,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make('/licenses/aliases'),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var RemoveAliasesResponsePayload $result */
@@ -383,7 +398,11 @@ final class LicensesResource implements LicensesResourceInterface
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState, $this->requestHeaderCollection);
+	}
+
+	protected function rebindWithRequestHeaderCollection(RequestHeaderCollection $requestHeaderCollection): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $this->authState, $requestHeaderCollection);
 	}
 
 	/**
@@ -402,7 +421,8 @@ final class LicensesResource implements LicensesResourceInterface
 			$this->apiUriFactory->make($path),
 			[],
 			$body,
-			$this->authState->requiredToken()
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var StatusChangePayload $result */

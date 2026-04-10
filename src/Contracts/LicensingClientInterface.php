@@ -25,4 +25,13 @@ interface LicensingClientInterface
 	public function withConfiguredToken(): self;
 
 	public function withToken(string $token): self;
+
+	/**
+	 * @param array<string, string|int|float|bool> $headers
+	 */
+	public function withHeaders(array $headers): self;
+
+	public function withTraceId(string $traceId): self;
+
+	public function withoutHeaders(): self;
 }

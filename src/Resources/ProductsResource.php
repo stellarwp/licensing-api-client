@@ -9,7 +9,9 @@ use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
 use LiquidWeb\LicensingApiClient\Responses\Product\Catalog;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -45,6 +47,7 @@ use Psr\Http\Client\ClientExceptionInterface;
 final class ProductsResource implements ProductsResourceInterface
 {
 	use RebindsAuthState;
+	use RebindsRequestHeaderCollection;
 
 	private RequestExecutor $requestExecutor;
 
@@ -52,14 +55,18 @@ final class ProductsResource implements ProductsResourceInterface
 
 	private AuthState $authState;
 
+	private RequestHeaderCollection $requestHeaderCollection;
+
 	public function __construct(
 		RequestExecutor $requestExecutor,
 		ApiUriFactory $apiUriFactory,
-		AuthState $authState
+		AuthState $authState,
+		RequestHeaderCollection $requestHeaderCollection
 	) {
-		$this->requestExecutor = $requestExecutor;
-		$this->apiUriFactory   = $apiUriFactory;
-		$this->authState       = $authState;
+		$this->requestExecutor         = $requestExecutor;
+		$this->apiUriFactory           = $apiUriFactory;
+		$this->authState               = $authState;
+		$this->requestHeaderCollection = $requestHeaderCollection;
 	}
 
 	/**
@@ -78,7 +85,8 @@ final class ProductsResource implements ProductsResourceInterface
 				'domain'      => $domain,
 			], static fn($value): bool => $value !== null),
 			null,
-			$this->authState->optionalToken()
+			$this->authState->optionalToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var CatalogPayload $result */
@@ -86,6 +94,10 @@ final class ProductsResource implements ProductsResourceInterface
 	}
 
 	protected function rebindWithAuthState(AuthState $authState): self {
-		return new self($this->requestExecutor, $this->apiUriFactory, $authState);
+		return new self($this->requestExecutor, $this->apiUriFactory, $authState, $this->requestHeaderCollection);
+	}
+
+	protected function rebindWithRequestHeaderCollection(RequestHeaderCollection $requestHeaderCollection): self {
+		return new self($this->requestExecutor, $this->apiUriFactory, $this->authState, $requestHeaderCollection);
 	}
 }

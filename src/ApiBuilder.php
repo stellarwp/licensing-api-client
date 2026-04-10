@@ -10,6 +10,7 @@ use LiquidWeb\LicensingApiClient\Http\Factories\ResponseExceptionFactory;
 use LiquidWeb\LicensingApiClient\Http\JsonDecoder;
 use LiquidWeb\LicensingApiClient\Http\RequestBuilder;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsLedgerResource;
 use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsPoolsResource;
 use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsQuotasResource;
@@ -49,30 +50,34 @@ final class ApiBuilder
 	}
 
 	public function build(): Api {
-		$authState       = new AuthState(new AuthContext(), $this->config->configuredToken);
-		$apiUriFactory   = new ApiUriFactory($this->config, ApiVersion::default());
-		$requestExecutor = $this->buildRequestExecutor();
-		$creditsPools    = new CreditsPoolsResource($requestExecutor, $apiUriFactory, $authState);
-		$creditsQuotas   = new CreditsQuotasResource($requestExecutor, $apiUriFactory, $authState);
-		$creditsLedger   = new CreditsLedgerResource(
+		$authState               = new AuthState(new AuthContext(), $this->config->configuredToken);
+		$requestHeaderCollection = new RequestHeaderCollection();
+		$apiUriFactory           = new ApiUriFactory($this->config, ApiVersion::default());
+		$requestExecutor         = $this->buildRequestExecutor();
+		$creditsPools            = new CreditsPoolsResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection);
+		$creditsQuotas           = new CreditsQuotasResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection);
+		$creditsLedger           = new CreditsLedgerResource(
 			$requestExecutor,
 			$apiUriFactory,
-			$authState
+			$authState,
+			$requestHeaderCollection
 		);
 
 		return new Api(
 			$authState,
-			new LicensesResource($requestExecutor, $apiUriFactory, $authState),
-			new ProductsResource($requestExecutor, $apiUriFactory, $authState),
+			$requestHeaderCollection,
+			new LicensesResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection),
+			new ProductsResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection),
 			new CreditsResource(
 				$requestExecutor,
 				$apiUriFactory,
 				$authState,
+				$requestHeaderCollection,
 				$creditsPools,
 				$creditsQuotas,
 				$creditsLedger
 			),
-			new EntitlementsResource($requestExecutor, $apiUriFactory, $authState)
+			new EntitlementsResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection)
 		);
 	}
 

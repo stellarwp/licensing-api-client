@@ -9,9 +9,11 @@ use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
 use LiquidWeb\LicensingApiClient\Http\AuthState;
 use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
+use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Requests\Credit\RecordUsage as RecordUsageRequest;
 use LiquidWeb\LicensingApiClient\Requests\Credit\Refund as RefundRequest;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
+use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsLedgerResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsPoolsResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsQuotasResourceInterface;
@@ -67,12 +69,15 @@ use Psr\Http\Client\ClientExceptionInterface;
 final class CreditsResource implements CreditsResourceInterface
 {
 	use RebindsAuthState;
+	use RebindsRequestHeaderCollection;
 
 	private RequestExecutor $requestExecutor;
 
 	private ApiUriFactory $apiUriFactory;
 
 	private AuthState $authState;
+
+	private RequestHeaderCollection $requestHeaderCollection;
 
 	private CreditsPoolsResource $pools;
 
@@ -84,16 +89,18 @@ final class CreditsResource implements CreditsResourceInterface
 		RequestExecutor $requestExecutor,
 		ApiUriFactory $apiUriFactory,
 		AuthState $authState,
+		RequestHeaderCollection $requestHeaderCollection,
 		CreditsPoolsResource $pools,
 		CreditsQuotasResource $quotas,
 		CreditsLedgerResource $ledger
 	) {
-		$this->requestExecutor = $requestExecutor;
-		$this->apiUriFactory   = $apiUriFactory;
-		$this->authState       = $authState;
-		$this->pools           = $pools;
-		$this->quotas          = $quotas;
-		$this->ledger          = $ledger;
+		$this->requestExecutor         = $requestExecutor;
+		$this->apiUriFactory           = $apiUriFactory;
+		$this->authState               = $authState;
+		$this->requestHeaderCollection = $requestHeaderCollection;
+		$this->pools                   = $pools;
+		$this->quotas                  = $quotas;
+		$this->ledger                  = $ledger;
 	}
 
 	/**
@@ -114,7 +121,8 @@ final class CreditsResource implements CreditsResourceInterface
 				'sort'        => $sort,
 			], static fn ($value): bool => $value !== null),
 			null,
-			$this->authState->optionalToken()
+			$this->authState->optionalToken(),
+			$this->requestHeaderCollection->all()
 		);
 
 		/** @var BalancePayload $result */
@@ -138,9 +146,9 @@ final class CreditsResource implements CreditsResourceInterface
 			[],
 			$body,
 			$this->authState->requiredToken(),
-			[
+			$this->requestHeaderCollection->merge([
 				'X-Idempotency-Key' => $request->idempotencyKey,
-			]
+			])
 		);
 
 		/** @var RecordUsageResponsePayload $result */
@@ -164,9 +172,9 @@ final class CreditsResource implements CreditsResourceInterface
 			[],
 			$body,
 			$this->authState->requiredToken(),
-			[
+			$this->requestHeaderCollection->merge([
 				'X-Idempotency-Key' => $request->idempotencyKey,
-			]
+			])
 		);
 
 		/** @var RefundResponsePayload $result */
@@ -211,9 +219,22 @@ final class CreditsResource implements CreditsResourceInterface
 			$this->requestExecutor,
 			$this->apiUriFactory,
 			$authState,
+			$this->requestHeaderCollection,
 			$this->pools->withAuthState($authState),
 			$this->quotas->withAuthState($authState),
 			$this->ledger->withAuthState($authState)
+		);
+	}
+
+	protected function rebindWithRequestHeaderCollection(RequestHeaderCollection $requestHeaderCollection): self {
+		return new self(
+			$this->requestExecutor,
+			$this->apiUriFactory,
+			$this->authState,
+			$requestHeaderCollection,
+			$this->pools->withRequestHeaderCollection($requestHeaderCollection),
+			$this->quotas->withRequestHeaderCollection($requestHeaderCollection),
+			$this->ledger->withRequestHeaderCollection($requestHeaderCollection)
 		);
 	}
 }
