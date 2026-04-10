@@ -6,6 +6,7 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\TokensResourceInterface;
 
 /**
  * Defines the root entrypoint for the Licensing API client.
@@ -19,6 +20,8 @@ interface LicensingClientInterface
 	public function products(): ProductsResourceInterface;
 
 	public function credits(): CreditsResourceInterface;
+
+	public function tokens(): TokensResourceInterface;
 
 	public function withoutAuth(): self;
 

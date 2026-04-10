@@ -10,6 +10,7 @@ use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsResource;
 use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
 use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
 use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
+use LiquidWeb\LicensingApiClient\Resources\TokensResource;
 
 /**
  * Provides immutable auth-state rebinding for auth-bound resource views.
@@ -21,6 +22,7 @@ use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
  * @mixin EntitlementsResource
  * @mixin LicensesResource
  * @mixin ProductsResource
+ * @mixin TokensResource
  */
 trait RebindsAuthState
 {

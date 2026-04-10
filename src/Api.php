@@ -9,10 +9,12 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\CreditsResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
+use LiquidWeb\LicensingApiClient\Resources\Contracts\TokensResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsResource;
 use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
 use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
 use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
+use LiquidWeb\LicensingApiClient\Resources\TokensResource;
 
 /**
  * Exposes the built API resources and immutable auth-state transitions.
@@ -31,13 +33,16 @@ final class Api implements LicensingClientInterface
 
 	private EntitlementsResource $entitlements;
 
+	private TokensResource $tokens;
+
 	public function __construct(
 		AuthState $authState,
 		RequestHeaderCollection $requestHeaderCollection,
 		LicensesResource $licenses,
 		ProductsResource $products,
 		CreditsResource $credits,
-		EntitlementsResource $entitlements
+		EntitlementsResource $entitlements,
+		TokensResource $tokens
 	) {
 		$this->authState               = $authState;
 		$this->requestHeaderCollection = $requestHeaderCollection;
@@ -45,6 +50,7 @@ final class Api implements LicensingClientInterface
 		$this->products                = $products;
 		$this->credits                 = $credits;
 		$this->entitlements            = $entitlements;
+		$this->tokens                  = $tokens;
 	}
 
 	public function entitlements(): EntitlementsResourceInterface {
@@ -63,6 +69,10 @@ final class Api implements LicensingClientInterface
 		return $this->credits;
 	}
 
+	public function tokens(): TokensResourceInterface {
+		return $this->tokens;
+	}
+
 	public function withoutAuth(): LicensingClientInterface {
 		return $this->cloneWithAuthState($this->authState->withoutAuth());
 	}
@@ -74,7 +84,8 @@ final class Api implements LicensingClientInterface
 			$this->licenses->withAuthState($authState),
 			$this->products->withAuthState($authState),
 			$this->credits->withAuthState($authState),
-			$this->entitlements->withAuthState($authState)
+			$this->entitlements->withAuthState($authState),
+			$this->tokens->withAuthState($authState)
 		);
 	}
 
@@ -104,7 +115,8 @@ final class Api implements LicensingClientInterface
 			$this->licenses->withRequestHeaderCollection($requestHeaderCollection),
 			$this->products->withRequestHeaderCollection($requestHeaderCollection),
 			$this->credits->withRequestHeaderCollection($requestHeaderCollection),
-			$this->entitlements->withRequestHeaderCollection($requestHeaderCollection)
+			$this->entitlements->withRequestHeaderCollection($requestHeaderCollection),
+			$this->tokens->withRequestHeaderCollection($requestHeaderCollection)
 		);
 	}
 

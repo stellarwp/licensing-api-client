@@ -18,6 +18,7 @@ use LiquidWeb\LicensingApiClient\Resources\Credit\CreditsResource;
 use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
 use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
 use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
+use LiquidWeb\LicensingApiClient\Resources\TokensResource;
 use Psr\Http\Client\ClientInterface as HttpClient;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -77,7 +78,8 @@ final class ApiBuilder
 				$creditsQuotas,
 				$creditsLedger
 			),
-			new EntitlementsResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection)
+			new EntitlementsResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection),
+			new TokensResource($requestExecutor, $apiUriFactory, $authState, $requestHeaderCollection)
 		);
 	}
 
