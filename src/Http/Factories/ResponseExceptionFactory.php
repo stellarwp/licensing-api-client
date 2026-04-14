@@ -6,6 +6,7 @@ use LiquidWeb\LicensingApiClient\Exceptions\ApiResponseException;
 use LiquidWeb\LicensingApiClient\Exceptions\AuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\AuthorizationException;
 use LiquidWeb\LicensingApiClient\Exceptions\ClientErrorException;
+use LiquidWeb\LicensingApiClient\Exceptions\ConflictException;
 use LiquidWeb\LicensingApiClient\Exceptions\DecodingException;
 use LiquidWeb\LicensingApiClient\Exceptions\NotFoundException;
 use LiquidWeb\LicensingApiClient\Exceptions\ServerErrorException;
@@ -89,6 +90,14 @@ final class ResponseExceptionFactory
 				);
 			case 403:
 				return new AuthorizationException(
+					$message,
+					$response,
+					$statusCode,
+					$errorCode,
+					$decoded
+				);
+			case 409:
+				return new ConflictException(
 					$message,
 					$response,
 					$statusCode,
@@ -186,6 +195,8 @@ final class ResponseExceptionFactory
 				return 'authentication_error';
 			case 403:
 				return 'authorization_error';
+			case 409:
+				return 'conflict_error';
 			case 404:
 				return 'not_found';
 			case 422:

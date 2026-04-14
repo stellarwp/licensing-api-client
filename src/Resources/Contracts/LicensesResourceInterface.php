@@ -11,6 +11,7 @@ use LiquidWeb\LicensingApiClient\Requests\License\Activate;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\ImportAliases;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\RemoveAliases;
 use LiquidWeb\LicensingApiClient\Requests\License\Deactivate;
+use LiquidWeb\LicensingApiClient\Requests\License\DeleteActivation;
 use LiquidWeb\LicensingApiClient\Requests\License\LicenseReference;
 use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey;
@@ -18,6 +19,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\Activate as ActivateResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases as ImportAliasesResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\RemoveAliases as RemoveAliasesResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Deactivate as DeactivateResponse;
+use LiquidWeb\LicensingApiClient\Responses\License\DeleteActivation as DeleteActivationResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\Listing\Listing;
 use LiquidWeb\LicensingApiClient\Responses\License\RegenerateKey as RegenerateKeyResponse;
 use LiquidWeb\LicensingApiClient\Responses\License\StatusChange;
@@ -66,6 +68,15 @@ interface LicensesResourceInterface
 	 * @throws JsonException
 	 */
 	public function deactivate(Deactivate $request): DeactivateResponse;
+
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
+	public function deleteActivation(DeleteActivation $request): DeleteActivationResponse;
 
 	/**
 	 * @param list<string> $productSlugs

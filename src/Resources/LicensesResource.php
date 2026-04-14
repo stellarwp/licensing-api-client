@@ -15,6 +15,7 @@ use LiquidWeb\LicensingApiClient\Requests\License\Activate as ActivateRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\ImportAliases as ImportAliasesRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\Alias\RemoveAliases as RemoveAliasesRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\Deactivate as DeactivateRequest;
+use LiquidWeb\LicensingApiClient\Requests\License\DeleteActivation as DeleteActivationRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\LicenseReference;
 use LiquidWeb\LicensingApiClient\Requests\License\Listing\ListRequest;
 use LiquidWeb\LicensingApiClient\Requests\License\RegenerateKey as RegenerateKeyRequest;
@@ -25,6 +26,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\Activate;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\ImportAliases;
 use LiquidWeb\LicensingApiClient\Responses\License\Alias\RemoveAliases;
 use LiquidWeb\LicensingApiClient\Responses\License\Deactivate;
+use LiquidWeb\LicensingApiClient\Responses\License\DeleteActivation;
 use LiquidWeb\LicensingApiClient\Responses\License\Listing\Listing;
 use LiquidWeb\LicensingApiClient\Responses\License\RegenerateKey;
 use LiquidWeb\LicensingApiClient\Responses\License\StatusChange;
@@ -109,6 +111,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  * }
  * @phpstan-import-type ActivatePayload from ActivateRequest
  * @phpstan-import-type DeactivatePayload from DeactivateRequest
+ * @phpstan-import-type DeleteActivationPayload from DeleteActivationRequest
  * @phpstan-import-type LicenseReferencePayload from LicenseReference
  * @phpstan-import-type RegenerateKeyPayload from RegenerateKeyRequest
  * @phpstan-import-type ImportAliasesPayload from ImportAliasesRequest
@@ -132,6 +135,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *     }|null
  * }
  * @phpstan-type DeactivateResponsePayload array{deactivated: bool}
+ * @phpstan-type DeleteActivationResponsePayload array{deleted: bool}
  * @phpstan-type StatusChangePayload array{license_key: string, status: string}
  * @phpstan-type RegenerateKeyResponsePayload array{license_key: string}
  * @phpstan-type ImportAliasesResponsePayload array{
@@ -210,6 +214,30 @@ final class LicensesResource implements LicensesResourceInterface
 
 		/** @var DeactivateResponsePayload $result */
 		return Deactivate::from($result);
+	}
+
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
+	public function deleteActivation(DeleteActivationRequest $request): DeleteActivation {
+		/** @var DeleteActivationPayload $body */
+		$body = $request->toArray();
+
+		$result = $this->requestExecutor->executeJson(
+			'DELETE',
+			$this->apiUriFactory->make('/licenses/activation'),
+			[],
+			$body,
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
+		);
+
+		/** @var DeleteActivationResponsePayload $result */
+		return DeleteActivation::from($result);
 	}
 
 	/**
