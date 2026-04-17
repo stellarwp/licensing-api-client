@@ -2,6 +2,9 @@
 
 namespace LiquidWeb\LicensingApiClient\Http;
 
+use LiquidWeb\LicensingApiClient\Tracing\TraceContext;
+use LiquidWeb\LicensingApiClient\Tracing\TraceParent;
+
 /**
  * Immutable request-header state shared across resource views.
  *
@@ -59,10 +62,34 @@ final class RequestHeaderCollection
 		return self::fromNormalized($merged);
 	}
 
-	public function withTraceId(string $traceId): self {
-		return $this->withHeaders([
-			'X-Trace-Id' => $traceId,
-		]);
+	public function withTraceParent(TraceParent $traceParent): self {
+		$normalized                = $this->headers;
+		$normalized['traceparent'] = [
+			'name'  => 'traceparent',
+			'value' => $traceParent->header(),
+		];
+
+		unset($normalized['tracestate']);
+
+		if ($normalized === $this->headers) {
+			return $this;
+		}
+
+		return self::fromNormalized($normalized);
+	}
+
+	public function withTraceContext(TraceContext $traceContext): self {
+		$normalized = array_replace($this->headers, $this->normalizeHeaders($traceContext->headers()));
+
+		if ($traceContext->traceState() === null) {
+			unset($normalized['tracestate']);
+		}
+
+		if ($normalized === $this->headers) {
+			return $this;
+		}
+
+		return self::fromNormalized($normalized);
 	}
 
 	/**

@@ -15,6 +15,8 @@ use LiquidWeb\LicensingApiClient\Resources\EntitlementsResource;
 use LiquidWeb\LicensingApiClient\Resources\LicensesResource;
 use LiquidWeb\LicensingApiClient\Resources\ProductsResource;
 use LiquidWeb\LicensingApiClient\Resources\TokensResource;
+use LiquidWeb\LicensingApiClient\Tracing\TraceContext;
+use LiquidWeb\LicensingApiClient\Tracing\TraceParent;
 
 /**
  * Exposes the built API resources and immutable auth-state transitions.
@@ -96,8 +98,12 @@ final class Api implements LicensingClientInterface
 		return $this->cloneWithRequestHeaderCollection($this->requestHeaderCollection->withHeaders($headers));
 	}
 
-	public function withTraceId(string $traceId): LicensingClientInterface {
-		return $this->cloneWithRequestHeaderCollection($this->requestHeaderCollection->withTraceId($traceId));
+	public function withTraceParent(TraceParent $traceParent): LicensingClientInterface {
+		return $this->cloneWithRequestHeaderCollection($this->requestHeaderCollection->withTraceParent($traceParent));
+	}
+
+	public function withTraceContext(TraceContext $traceContext): LicensingClientInterface {
+		return $this->cloneWithRequestHeaderCollection($this->requestHeaderCollection->withTraceContext($traceContext));
 	}
 
 	public function withoutHeaders(): LicensingClientInterface {

@@ -7,6 +7,8 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterfa
 use LiquidWeb\LicensingApiClient\Resources\Contracts\LicensesResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\ProductsResourceInterface;
 use LiquidWeb\LicensingApiClient\Resources\Contracts\TokensResourceInterface;
+use LiquidWeb\LicensingApiClient\Tracing\TraceContext;
+use LiquidWeb\LicensingApiClient\Tracing\TraceParent;
 
 /**
  * Defines the root entrypoint for the Licensing API client.
@@ -34,7 +36,9 @@ interface LicensingClientInterface
 	 */
 	public function withHeaders(array $headers): self;
 
-	public function withTraceId(string $traceId): self;
+	public function withTraceParent(TraceParent $traceParent): self;
+
+	public function withTraceContext(TraceContext $traceContext): self;
 
 	public function withoutHeaders(): self;
 }

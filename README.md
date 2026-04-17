@@ -31,15 +31,18 @@ Short example:
 ```php
 <?php declare(strict_types=1);
 
-$traceId = bin2hex(random_bytes(16));
+use LiquidWeb\LicensingApiClient\Tracing\TraceParent;
 
 $catalog = $api
-	->withTraceId($traceId)
+	->withTraceParent(TraceParent::generate())
 	->products()
 	->catalog('LWSW-8H9F-5UKA-VR3B-D7SQ-BP9N', 'example.com');
 ```
 
-Use `withTraceId()` when you want your own request or workflow identifier to be forwarded as `X-Trace-Id`. The licensing service uses that header as its request `trace_id` and includes it in the Axiom trace/log pipeline. Use `withHeaders()` for other custom headers.
+Use `withTraceParent()` when you want the SDK to carry one validated W3C `traceparent` value. Build it with `TraceParent::generate()` when you are starting a new trace locally, or `TraceParent::fromString()` when you are continuing one from an inbound request. If you also have vendor-specific `tracestate`, use `TraceContext::fromValues()` and pass that to `withTraceContext()` instead. Use `withHeaders()` for unrelated custom headers.
+
+> [!WARNING]
+> This only pays off when your own application is also exporting spans to Axiom or another tracing backend. If your application is not instrumented, the licensing service can still continue the propagated trace context, but Axiom will not be able to find the real parent span because it never received it.
 
 ## Status
 
