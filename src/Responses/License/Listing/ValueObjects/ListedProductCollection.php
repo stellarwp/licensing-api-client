@@ -31,6 +31,7 @@ use Traversable;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
+ *         excess_activations: int,
  *         domains: ActivationDomainsPayload
  *     }
  * }>>
@@ -62,6 +63,7 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         domains: ActivationDomainsPayload
 	 *     }
 	 * }> $attributes
@@ -167,6 +169,7 @@ final class ListedProductCollection implements ArrayAccess, Countable, IteratorA
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         domains: ActivationDomainsPayload
 	 *     }
 	 * }>

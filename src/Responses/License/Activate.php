@@ -19,6 +19,10 @@ use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
  *         product_slug: string,
  *         tier: string,
  *         site_limit: int,
+ *         active_count: int,
+ *         available: int,
+ *         over_limit: bool,
+ *         excess_activations: int,
  *         expiration_date: string,
  *         status: string,
  *         capabilities: list<string>
@@ -69,6 +73,10 @@ final class Activate implements Response
 	 *         product_slug: string,
 	 *         tier: string,
 	 *         site_limit: int,
+	 *         active_count: int,
+	 *         available: int,
+	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         expiration_date: string,
 	 *         status: string,
 	 *         capabilities: list<string>

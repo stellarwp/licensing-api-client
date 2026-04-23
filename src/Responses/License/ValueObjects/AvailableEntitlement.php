@@ -16,6 +16,8 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
  *     site_limit: int,
  *     active_count: int,
  *     available: int,
+ *     over_limit: bool,
+ *     excess_activations: int,
  *     capabilities: list<string>,
  *     status: string,
  *     expires: string
@@ -33,6 +35,10 @@ final class AvailableEntitlement implements Response
 
 	public int $available;
 
+	public bool $overLimit;
+
+	public int $excessActivations;
+
 	public CapabilityCollection $capabilities;
 
 	public string $status;
@@ -44,17 +50,21 @@ final class AvailableEntitlement implements Response
 		int $siteLimit,
 		int $activeCount,
 		int $available,
+		bool $overLimit,
+		int $excessActivations,
 		CapabilityCollection $capabilities,
 		string $status,
 		DateTimeImmutable $expires
 	) {
-		$this->tier         = $tier;
-		$this->siteLimit    = $siteLimit;
-		$this->activeCount  = $activeCount;
-		$this->available    = $available;
-		$this->capabilities = $capabilities;
-		$this->status       = $status;
-		$this->expires      = $expires;
+		$this->tier              = $tier;
+		$this->siteLimit         = $siteLimit;
+		$this->activeCount       = $activeCount;
+		$this->available         = $available;
+		$this->overLimit         = $overLimit;
+		$this->excessActivations = $excessActivations;
+		$this->capabilities      = $capabilities;
+		$this->status            = $status;
+		$this->expires           = $expires;
 	}
 
 	/**
@@ -63,6 +73,8 @@ final class AvailableEntitlement implements Response
 	 *     site_limit: int,
 	 *     active_count: int,
 	 *     available: int,
+	 *     over_limit: bool,
+	 *     excess_activations: int,
 	 *     capabilities: list<string>,
 	 *     status: string,
 	 *     expires: string
@@ -76,6 +88,8 @@ final class AvailableEntitlement implements Response
 			$attributes['site_limit'],
 			$attributes['active_count'],
 			$attributes['available'],
+			$attributes['over_limit'],
+			$attributes['excess_activations'],
 			CapabilityCollection::from($attributes['capabilities']),
 			$attributes['status'],
 			self::parseDateTime($attributes['expires'])
@@ -84,13 +98,15 @@ final class AvailableEntitlement implements Response
 
 	public function toArray(): array {
 		return [
-			'tier'         => $this->tier,
-			'site_limit'   => $this->siteLimit,
-			'active_count' => $this->activeCount,
-			'available'    => $this->available,
-			'capabilities' => $this->capabilities->toArray(),
-			'status'       => $this->status,
-			'expires'      => $this->formatDateTime($this->expires),
+			'tier'               => $this->tier,
+			'site_limit'         => $this->siteLimit,
+			'active_count'       => $this->activeCount,
+			'available'          => $this->available,
+			'over_limit'         => $this->overLimit,
+			'excess_activations' => $this->excessActivations,
+			'capabilities'       => $this->capabilities->toArray(),
+			'status'             => $this->status,
+			'expires'            => $this->formatDateTime($this->expires),
 		];
 	}
 }

@@ -15,6 +15,10 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
  *     product_slug: string,
  *     tier: string,
  *     site_limit: int,
+ *     active_count: int,
+ *     available: int,
+ *     over_limit: bool,
+ *     excess_activations: int,
  *     expiration_date: string,
  *     status: string,
  *     capabilities: list<string>
@@ -30,6 +34,14 @@ final class ActivationEntitlement implements Response
 
 	public int $siteLimit;
 
+	public int $activeCount;
+
+	public int $available;
+
+	public bool $overLimit;
+
+	public int $excessActivations;
+
 	public DateTimeImmutable $expirationDate;
 
 	public string $status;
@@ -40,16 +52,24 @@ final class ActivationEntitlement implements Response
 		string $productSlug,
 		string $tier,
 		int $siteLimit,
+		int $activeCount,
+		int $available,
+		bool $overLimit,
+		int $excessActivations,
 		DateTimeImmutable $expirationDate,
 		string $status,
 		CapabilityCollection $capabilities
 	) {
-		$this->productSlug    = $productSlug;
-		$this->tier           = $tier;
-		$this->siteLimit      = $siteLimit;
-		$this->expirationDate = $expirationDate;
-		$this->status         = $status;
-		$this->capabilities   = $capabilities;
+		$this->productSlug       = $productSlug;
+		$this->tier              = $tier;
+		$this->siteLimit         = $siteLimit;
+		$this->activeCount       = $activeCount;
+		$this->available         = $available;
+		$this->overLimit         = $overLimit;
+		$this->excessActivations = $excessActivations;
+		$this->expirationDate    = $expirationDate;
+		$this->status            = $status;
+		$this->capabilities      = $capabilities;
 	}
 
 	/**
@@ -57,6 +77,10 @@ final class ActivationEntitlement implements Response
 	 *     product_slug: string,
 	 *     tier: string,
 	 *     site_limit: int,
+	 *     active_count: int,
+	 *     available: int,
+	 *     over_limit: bool,
+	 *     excess_activations: int,
 	 *     expiration_date: string,
 	 *     status: string,
 	 *     capabilities: list<string>
@@ -69,6 +93,10 @@ final class ActivationEntitlement implements Response
 			$attributes['product_slug'],
 			$attributes['tier'],
 			$attributes['site_limit'],
+			$attributes['active_count'],
+			$attributes['available'],
+			$attributes['over_limit'],
+			$attributes['excess_activations'],
 			self::parseDateTime($attributes['expiration_date']),
 			$attributes['status'],
 			CapabilityCollection::from($attributes['capabilities'])
@@ -80,6 +108,10 @@ final class ActivationEntitlement implements Response
 	 *     product_slug: string,
 	 *     tier: string,
 	 *     site_limit: int,
+	 *     active_count: int,
+	 *     available: int,
+	 *     over_limit: bool,
+	 *     excess_activations: int,
 	 *     expiration_date: string,
 	 *     status: string,
 	 *     capabilities: list<string>
@@ -87,12 +119,16 @@ final class ActivationEntitlement implements Response
 	 */
 	public function toArray(): array {
 		return [
-			'product_slug'    => $this->productSlug,
-			'tier'            => $this->tier,
-			'site_limit'      => $this->siteLimit,
-			'expiration_date' => $this->formatDateTime($this->expirationDate),
-			'status'          => $this->status,
-			'capabilities'    => $this->capabilities->toArray(),
+			'product_slug'       => $this->productSlug,
+			'tier'               => $this->tier,
+			'site_limit'         => $this->siteLimit,
+			'active_count'       => $this->activeCount,
+			'available'          => $this->available,
+			'over_limit'         => $this->overLimit,
+			'excess_activations' => $this->excessActivations,
+			'expiration_date'    => $this->formatDateTime($this->expirationDate),
+			'status'             => $this->status,
+			'capabilities'       => $this->capabilities->toArray(),
 		];
 	}
 }

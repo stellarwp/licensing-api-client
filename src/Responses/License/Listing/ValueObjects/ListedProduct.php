@@ -30,6 +30,7 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
+ *         excess_activations: int,
  *         domains: ActivationDomainsPayload
  *     }
  * }>
@@ -77,6 +78,7 @@ final class ListedProduct implements Response
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         domains: ActivationDomainsPayload
 	 *     }
 	 * } $attributes

@@ -37,6 +37,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *             site_limit: int,
  *             active_count: int,
  *             over_limit: bool,
+ *             excess_activations: int,
  *             domains: ActivationDomainsPayload
  *         },
  *         activated_here?: bool,

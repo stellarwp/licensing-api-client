@@ -34,6 +34,7 @@ use LiquidWeb\LicensingApiClient\Responses\License\Alias\ValueObjects\ImportedAl
  *             site_limit: int,
  *             active_count: int,
  *             over_limit: bool,
+ *             excess_activations: int,
  *             domains: ActivationDomainsPayload
  *         }
  *     }>,
@@ -99,6 +100,7 @@ final class LicenseListItem implements Response
 	 *             site_limit: int,
 	 *             active_count: int,
 	 *             over_limit: bool,
+	 *             excess_activations: int,
 	 *             domains: ActivationDomainsPayload
 	 *         }
 	 *     }>,
@@ -137,6 +139,7 @@ final class LicenseListItem implements Response
 	 *             site_limit: int,
 	 *             active_count: int,
 	 *             over_limit: bool,
+	 *             excess_activations: int,
 	 *             domains: ActivationDomainsPayload
 	 *         }
 	 *     }>,

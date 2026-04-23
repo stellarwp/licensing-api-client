@@ -12,7 +12,8 @@ use LiquidWeb\LicensingApiClient\Responses\Contracts\Response;
  * @implements Response<array{
  *     id: int,
  *     pool_id: int,
- *     activation_id: int,
+ *     entitlement_id_at_event: int,
+ *     tier_at_event: string,
  *     domain: string,
  *     product_slug: string,
  *     credit_type: string,
@@ -31,7 +32,9 @@ final class LedgerEntry implements Response
 
 	public int $poolId;
 
-	public int $activationId;
+	public int $entitlementIdAtEvent;
+
+	public string $tierAtEvent;
 
 	public string $domain;
 
@@ -52,7 +55,8 @@ final class LedgerEntry implements Response
 	private function __construct(
 		int $id,
 		int $poolId,
-		int $activationId,
+		int $entitlementIdAtEvent,
+		string $tierAtEvent,
 		string $domain,
 		string $productSlug,
 		string $creditType,
@@ -62,24 +66,26 @@ final class LedgerEntry implements Response
 		string $idempotencyKey,
 		DateTimeImmutable $createdAt
 	) {
-		$this->id             = $id;
-		$this->poolId         = $poolId;
-		$this->activationId   = $activationId;
-		$this->domain         = $domain;
-		$this->productSlug    = $productSlug;
-		$this->creditType     = $creditType;
-		$this->entryType      = $entryType;
-		$this->amount         = $amount;
-		$this->periodStart    = $periodStart;
-		$this->idempotencyKey = $idempotencyKey;
-		$this->createdAt      = $createdAt;
+		$this->id                   = $id;
+		$this->poolId               = $poolId;
+		$this->entitlementIdAtEvent = $entitlementIdAtEvent;
+		$this->tierAtEvent          = $tierAtEvent;
+		$this->domain               = $domain;
+		$this->productSlug          = $productSlug;
+		$this->creditType           = $creditType;
+		$this->entryType            = $entryType;
+		$this->amount               = $amount;
+		$this->periodStart          = $periodStart;
+		$this->idempotencyKey       = $idempotencyKey;
+		$this->createdAt            = $createdAt;
 	}
 
 	/**
 	 * @param array{
 	 *     id: int,
 	 *     pool_id: int,
-	 *     activation_id: int,
+	 *     entitlement_id_at_event: int,
+	 *     tier_at_event: string,
 	 *     domain: string,
 	 *     product_slug: string,
 	 *     credit_type: string,
@@ -94,7 +100,8 @@ final class LedgerEntry implements Response
 		return new self(
 			$attributes['id'],
 			$attributes['pool_id'],
-			$attributes['activation_id'],
+			$attributes['entitlement_id_at_event'],
+			$attributes['tier_at_event'],
 			$attributes['domain'],
 			$attributes['product_slug'],
 			$attributes['credit_type'],
@@ -110,7 +117,8 @@ final class LedgerEntry implements Response
 	 * @return array{
 	 *     id: int,
 	 *     pool_id: int,
-	 *     activation_id: int,
+	 *     entitlement_id_at_event: int,
+	 *     tier_at_event: string,
 	 *     domain: string,
 	 *     product_slug: string,
 	 *     credit_type: string,
@@ -123,17 +131,18 @@ final class LedgerEntry implements Response
 	 */
 	public function toArray(): array {
 		return [
-			'id'              => $this->id,
-			'pool_id'         => $this->poolId,
-			'activation_id'   => $this->activationId,
-			'domain'          => $this->domain,
-			'product_slug'    => $this->productSlug,
-			'credit_type'     => $this->creditType,
-			'entry_type'      => $this->entryType,
-			'amount'          => $this->amount,
-			'period_start'    => $this->periodStart ? $this->periodStart->format('Y-m-d\TH:i:s\Z') : null,
-			'idempotency_key' => $this->idempotencyKey,
-			'created_at'      => $this->createdAt->format('Y-m-d\TH:i:s\Z'),
+			'id'                      => $this->id,
+			'pool_id'                 => $this->poolId,
+			'entitlement_id_at_event' => $this->entitlementIdAtEvent,
+			'tier_at_event'           => $this->tierAtEvent,
+			'domain'                  => $this->domain,
+			'product_slug'            => $this->productSlug,
+			'credit_type'             => $this->creditType,
+			'entry_type'              => $this->entryType,
+			'amount'                  => $this->amount,
+			'period_start'            => $this->periodStart ? $this->periodStart->format('Y-m-d\TH:i:s\Z') : null,
+			'idempotency_key'         => $this->idempotencyKey,
+			'created_at'              => $this->createdAt->format('Y-m-d\TH:i:s\Z'),
 		];
 	}
 }

@@ -21,6 +21,10 @@ use Traversable;
  *     entitlement: array{
  *         tier: string,
  *         site_limit: int,
+ *         active_count: int,
+ *         available: int,
+ *         over_limit: bool,
+ *         excess_activations: int,
  *         expiration_date: string,
  *         status: string,
  *         capabilities: list<string>
@@ -34,6 +38,8 @@ use Traversable;
  *         site_limit: int,
  *         active_count: int,
  *         available: int,
+ *         over_limit: bool,
+ *         excess_activations: int,
  *         capabilities: list<string>,
  *         status: string,
  *         expires: string
@@ -64,6 +70,10 @@ final class ValidatedProductCollection implements ArrayAccess, Countable, Iterat
 	 *     entitlement: array{
 	 *         tier: string,
 	 *         site_limit: int,
+	 *         active_count: int,
+	 *         available: int,
+	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         expiration_date: string,
 	 *         status: string,
 	 *         capabilities: list<string>
@@ -77,6 +87,8 @@ final class ValidatedProductCollection implements ArrayAccess, Countable, Iterat
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         available: int,
+	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         capabilities: list<string>,
 	 *         status: string,
 	 *         expires: string

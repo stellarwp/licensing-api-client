@@ -54,6 +54,10 @@ use Psr\Http\Client\ClientExceptionInterface;
  *         entitlement: array{
  *             tier: string,
  *             site_limit: int,
+ *             active_count: int,
+ *             available: int,
+ *             over_limit: bool,
+ *             excess_activations: int,
  *             expiration_date: string,
  *             status: string,
  *             capabilities: list<string>
@@ -67,6 +71,8 @@ use Psr\Http\Client\ClientExceptionInterface;
  *             site_limit: int,
  *             active_count: int,
  *             available: int,
+ *             over_limit: bool,
+ *             excess_activations: int,
  *             capabilities: list<string>,
  *             status: string,
  *             expires: string
@@ -90,6 +96,7 @@ use Psr\Http\Client\ClientExceptionInterface;
  *                 site_limit: int,
  *                 active_count: int,
  *                 over_limit: bool,
+ *                 excess_activations: int,
  *                 domains: ActivationDomainsPayload
  *             }
  *         }>,
@@ -125,6 +132,10 @@ use Psr\Http\Client\ClientExceptionInterface;
  *         product_slug: string,
  *         tier: string,
  *         site_limit: int,
+ *         active_count: int,
+ *         available: int,
+ *         over_limit: bool,
+ *         excess_activations: int,
  *         expiration_date: string,
  *         status: string,
  *         capabilities: list<string>

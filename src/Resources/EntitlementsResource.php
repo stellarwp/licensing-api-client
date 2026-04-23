@@ -11,6 +11,7 @@ use LiquidWeb\LicensingApiClient\Http\Factories\ApiUriFactory;
 use LiquidWeb\LicensingApiClient\Http\RequestBuilder;
 use LiquidWeb\LicensingApiClient\Http\RequestExecutor;
 use LiquidWeb\LicensingApiClient\Http\RequestHeaderCollection;
+use LiquidWeb\LicensingApiClient\Requests\Entitlement\SwitchTier as SwitchTierRequest;
 use LiquidWeb\LicensingApiClient\Requests\Entitlement\Upsert as UpsertRequest;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsAuthState;
 use LiquidWeb\LicensingApiClient\Resources\Concerns\RebindsRequestHeaderCollection;
@@ -18,6 +19,7 @@ use LiquidWeb\LicensingApiClient\Resources\Contracts\EntitlementsResourceInterfa
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Cancel;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Delete;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Suspend;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\SwitchTier as SwitchTierResponse;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Unsuspend;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -41,6 +43,15 @@ use Psr\Http\Client\ClientExceptionInterface;
  * }
  * @phpstan-type DeletePayload array{
  *     deleted: bool
+ * }
+ * @phpstan-type SwitchTierPayload array{
+ *     product_slug: string,
+ *     from_tier: string,
+ *     to_tier: string,
+ *     status: string,
+ *     site_limit: int,
+ *     active_count: int,
+ *     over_limit: bool
  * }
  */
 final class EntitlementsResource implements EntitlementsResourceInterface
@@ -90,6 +101,30 @@ final class EntitlementsResource implements EntitlementsResourceInterface
 
 		/** @var UpsertPayload $result */
 		return UpsertResponse::from($result);
+	}
+
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
+	public function switchTier(SwitchTierRequest $request): SwitchTierResponse {
+		/** @var JsonObject $body */
+		$body = $request->toArray();
+
+		$result = $this->requestExecutor->executeJson(
+			'POST',
+			$this->apiUriFactory->make('/entitlements/switch-tier'),
+			[],
+			$body,
+			$this->authState->requiredToken(),
+			$this->requestHeaderCollection->all()
+		);
+
+		/** @var SwitchTierPayload $result */
+		return SwitchTierResponse::from($result);
 	}
 
 	/**

@@ -14,7 +14,8 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
  *     entries: list<array{
  *         id: int,
  *         pool_id: int,
- *         activation_id: int,
+ *         entitlement_id_at_event: int,
+ *         tier_at_event: string,
  *         domain: string,
  *         product_slug: string,
  *         credit_type: string,
@@ -64,7 +65,8 @@ final class LedgerPage implements Response
 	 *     entries: list<array{
 	 *         id: int,
 	 *         pool_id: int,
-	 *         activation_id: int,
+	 *         entitlement_id_at_event: int,
+	 *         tier_at_event: string,
 	 *         domain: string,
 	 *         product_slug: string,
 	 *         credit_type: string,
@@ -105,7 +107,8 @@ final class LedgerPage implements Response
 	 *     entries: list<array{
 	 *         id: int,
 	 *         pool_id: int,
-	 *         activation_id: int,
+	 *         entitlement_id_at_event: int,
+	 *         tier_at_event: string,
 	 *         domain: string,
 	 *         product_slug: string,
 	 *         credit_type: string,

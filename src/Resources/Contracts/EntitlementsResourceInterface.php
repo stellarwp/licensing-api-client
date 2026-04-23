@@ -6,10 +6,12 @@ use JsonException;
 use LiquidWeb\LicensingApiClient\Exceptions\Contracts\ApiErrorExceptionInterface;
 use LiquidWeb\LicensingApiClient\Exceptions\MissingAuthenticationException;
 use LiquidWeb\LicensingApiClient\Exceptions\UnexpectedResponseException;
+use LiquidWeb\LicensingApiClient\Requests\Entitlement\SwitchTier;
 use LiquidWeb\LicensingApiClient\Requests\Entitlement\Upsert;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Cancel;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Delete;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Suspend;
+use LiquidWeb\LicensingApiClient\Responses\Entitlement\SwitchTier as SwitchTierResponse;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Unsuspend;
 use LiquidWeb\LicensingApiClient\Responses\Entitlement\Upsert as UpsertResponse;
 use Psr\Http\Client\ClientExceptionInterface;
@@ -27,6 +29,15 @@ interface EntitlementsResourceInterface
 	 * @throws JsonException
 	 */
 	public function upsert(Upsert $request): UpsertResponse;
+
+	/**
+	 * @throws ApiErrorExceptionInterface
+	 * @throws MissingAuthenticationException
+	 * @throws UnexpectedResponseException
+	 * @throws ClientExceptionInterface
+	 * @throws JsonException
+	 */
+	public function switchTier(SwitchTier $request): SwitchTierResponse;
 
 	/**
 	 * @throws ApiErrorExceptionInterface

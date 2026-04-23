@@ -30,6 +30,7 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\CapabilityCollection;
  *         site_limit: int,
  *         active_count: int,
  *         over_limit: bool,
+ *         excess_activations: int,
  *         domains: ActivationDomainsPayload
  *     },
  *     activated_here?: bool,
@@ -92,6 +93,7 @@ final class CatalogEntry implements Response
 	 *         site_limit: int,
 	 *         active_count: int,
 	 *         over_limit: bool,
+	 *         excess_activations: int,
 	 *         domains: ActivationDomainsPayload
 	 *     },
 	 *     activated_here?: bool,

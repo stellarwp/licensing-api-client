@@ -19,6 +19,10 @@ use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
  *         entitlement: array{
  *             tier: string,
  *             site_limit: int,
+ *             active_count: int,
+ *             available: int,
+ *             over_limit: bool,
+ *             excess_activations: int,
  *             expiration_date: string,
  *             status: string,
  *             capabilities: list<string>
@@ -32,6 +36,8 @@ use LiquidWeb\LicensingApiClient\Responses\License\ValueObjects\LicenseSummary;
  *             site_limit: int,
  *             active_count: int,
  *             available: int,
+ *             over_limit: bool,
+ *             excess_activations: int,
  *             capabilities: list<string>,
  *             status: string,
  *             expires: string
@@ -75,6 +81,10 @@ final class Validate implements Response
 	 *         entitlement: array{
 	 *             tier: string,
 	 *             site_limit: int,
+	 *             active_count: int,
+	 *             available: int,
+	 *             over_limit: bool,
+	 *             excess_activations: int,
 	 *             expiration_date: string,
 	 *             status: string,
 	 *             capabilities: list<string>
@@ -88,6 +98,8 @@ final class Validate implements Response
 	 *             site_limit: int,
 	 *             active_count: int,
 	 *             available: int,
+	 *             over_limit: bool,
+	 *             excess_activations: int,
 	 *             capabilities: list<string>,
 	 *             status: string,
 	 *             expires: string

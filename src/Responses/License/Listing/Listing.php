@@ -35,6 +35,7 @@ use LiquidWeb\LicensingApiClient\Responses\ValueObjects\PaginationLinks;
  *                 site_limit: int,
  *                 active_count: int,
  *                 over_limit: bool,
+ *                 excess_activations: int,
  *                 domains: ActivationDomainsPayload
  *             }
  *         }>,
@@ -93,6 +94,7 @@ final class Listing implements Response
 	 *                 site_limit: int,
 	 *                 active_count: int,
 	 *                 over_limit: bool,
+	 *                 excess_activations: int,
 	 *                 domains: ActivationDomainsPayload
 	 *             }
 	 *         }>,
@@ -139,6 +141,7 @@ final class Listing implements Response
 	 *                 site_limit: int,
 	 *                 active_count: int,
 	 *                 over_limit: bool,
+	 *                 excess_activations: int,
 	 *                 domains: ActivationDomainsPayload
 	 *             }
 	 *         }>,
